@@ -82,7 +82,7 @@ public class TileManager : MonoBehaviour
     {
         public readonly Dictionary<TilePos, Tile> Tiles;
         private TileManager Manager;
-        private GameObject player;
+        private PlayerController playerComp;
 
         public bool StepActive = false;
         public float CurrentStepDelta = 0.0f;
@@ -105,7 +105,9 @@ public class TileManager : MonoBehaviour
                 entry.Value.Comp = comp;
             }
             // make player
-            this.player = Instantiate(manager.playerPrefab, playerPos.ToTransformPosition(), Quaternion.identity);
+            var player = Instantiate(manager.playerPrefab, playerPos.ToTransformPosition(), Quaternion.identity);
+            this.playerComp = player.GetComponent<PlayerController>();
+            this.playerComp.myLevel = this;
         }
 
         public Tile Get(TilePos pos)
