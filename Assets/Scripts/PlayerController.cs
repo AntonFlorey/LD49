@@ -14,11 +14,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpTime = 0.5f;
     [SerializeField] private Sprite[] mySprites;
     private SpriteRenderer myRenderer;
+    private Animator myAnimator;
     public TileManager.Level myLevel;
 
 	private void Start()
 	{
-        myRenderer = this.GetComponent<SpriteRenderer>();
+        myRenderer = this.GetComponentInChildren<SpriteRenderer>();
+        myAnimator = this.GetComponent<Animator>();
         AdjustDepth();
 	}
 
@@ -103,14 +105,17 @@ public class PlayerController : MonoBehaviour
         canPush = false;
         jumpedOff = false;
 
-		// Play some animation
+        // Play some animation
+        myAnimator.speed = 1.0f / jumpTime;
+        myAnimator.Play("JumpDown", -1,  0.0f);
+        
 		// Insert a sound or smth
 
 		while (!jumpedOff)
 		{
             yield return null;
 		}
-        jumpedOff = false;
+        
 
         while (currentStepDelta < 1)
 		{
@@ -121,8 +126,6 @@ public class PlayerController : MonoBehaviour
 
         // Player arrived at the new tile
         pos = newTile;
-        canMove = true; // Put in animation
-        canPush = true; // Put in animation
         
         // check win condition
         if (this.myLevel.Get(pos).HasFlag)
