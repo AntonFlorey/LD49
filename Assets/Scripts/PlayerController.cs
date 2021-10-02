@@ -131,6 +131,6 @@ public class PlayerController : MonoBehaviour
 
     private bool TileClear(TileManager.TilePos checkPos)
 	{
-        return myLevel.Get(checkPos) != null && myLevel.Get(checkPos).Type.Walkable;
+        return myLevel.Get(checkPos) != null && myLevel.Get(checkPos).Walkable;
 	}
 }
