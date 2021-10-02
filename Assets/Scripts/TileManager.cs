@@ -97,7 +97,7 @@ public class TileManager : MonoBehaviour
     public class Level
     {
         public readonly Dictionary<TilePos, Tile> Tiles;
-        private TileManager Manager;
+        public TileManager Manager;
         private PlayerController playerComp;
 
         public bool StepActive = false;
@@ -241,7 +241,7 @@ public class TileManager : MonoBehaviour
         return new Level(tiles, playerPos, this);
     }
 
-    private void RestartCurrentLevel()
+    public void RestartCurrentLevel()
     {
         if (this.currentLevel != null)
             this.currentLevel.Cleanup();

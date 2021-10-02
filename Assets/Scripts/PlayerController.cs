@@ -71,6 +71,12 @@ public class PlayerController : MonoBehaviour
         canMove = true;
         AdjustDepth();
         
+        // check win condition
+        if (this.myLevel.Get(pos).HasFlag)
+        {
+	        this.myLevel.Manager.currentLevelId++;
+	        this.myLevel.Manager.RestartCurrentLevel();
+        }
 	}
 
     private void AdjustDepth()
