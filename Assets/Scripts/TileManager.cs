@@ -24,6 +24,8 @@ public class TileManager : MonoBehaviour
     public GameObject grass1TilePrefab;
     private Dictionary<TileType, GameObject> tilePrefabs = new Dictionary<TileType, GameObject>();
 
+    public GameObject playerPrefab;
+    
     public class TileType
     {
         private static readonly Dictionary<char, TileType> byCode = new Dictionary<char, TileType>();
@@ -44,10 +46,12 @@ public class TileManager : MonoBehaviour
     public class Tile
     {
         public readonly TileType Type;
+        public GameObject Object;
 
         public Tile(TileType type)
         {
             this.Type = type;
+            this.Object = null;
         }
     }
 
@@ -72,16 +76,21 @@ public class TileManager : MonoBehaviour
     {
         public readonly Dictionary<TilePos, Tile> Tiles;
         private TileManager Manager;
+        private GameObject player;
 
-        public Level(Dictionary<TilePos, Tile> tiles, TileManager manager)
+        public Level(Dictionary<TilePos, Tile> tiles, TilePos playerPos, TileManager manager)
         {
             this.Tiles = tiles;
             this.Manager = manager;
-
+            
+            // make tiles
             foreach (var entry in tiles)
             {
-                Instantiate(manager.tilePrefabs[entry.Value.Type], entry.Key.ToTransformPosition(), Quaternion.identity);
+                var obj = Instantiate(manager.tilePrefabs[entry.Value.Type], entry.Key.ToTransformPosition(), Quaternion.identity);
+                entry.Value.Object = obj;
             }
+            // make player
+            this.player = Instantiate(manager.playerPrefab, playerPos.ToTransformPosition(), Quaternion.identity);
         }
     }
     
@@ -90,6 +99,7 @@ public class TileManager : MonoBehaviour
     {
         var lines = Regex.Split(textAsset.text, "\r\n|\r|\n");
         var tiles = new Dictionary<TilePos, Tile>();
+        TilePos playerPos = new TilePos(0, 0);
         for (int y = 0; y < lines.Length; y++)
         {
             for (int x = 0; x < lines[y].Length; x++)
@@ -97,12 +107,23 @@ public class TileManager : MonoBehaviour
                 var code = lines[y][x];
                 if (code != ' ')
                 {
-                    tiles.Add(new TilePos(x, y), new Tile(TileType.FromCode(code)));
+                    var pos = new TilePos(x, y);
+                    TileType tileType;
+                    if (code == 'A')
+                    {
+                        tileType = GrassFull;
+                        playerPos = pos;
+                    }
+                    else
+                    {
+                        tileType = TileType.FromCode(code);
+                    }
+                    tiles.Add(pos, new Tile(tileType));
                 }
             }
         }
 
-        return new Level(tiles, this);
+        return new Level(tiles, playerPos, this);
     }
 
     private void Start()
