@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 direction;
     [SerializeField] private Sprite[] mySprites;
     private SpriteRenderer myRenderer;
+    public TileManager.Level myLevel;
 
 	private void Start()
 	{
@@ -38,7 +39,7 @@ public class PlayerController : MonoBehaviour
 
     private void AdjustDepth()
 	{
-        Vector2 posInTileSpace = getPosInTileSpace(this.transform.position);
+        Vector2 posInTileSpace = GetPosInTileSpace(this.transform.position);
         this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, -2.0f + posInTileSpace.y - posInTileSpace.x);
 	}
 
@@ -47,8 +48,13 @@ public class PlayerController : MonoBehaviour
         myRenderer.flipX = direction.x < 0;
 	}
 
-    private Vector2 getPosInTileSpace(Vector2 worldPos)
+    private Vector2 GetPosInTileSpace(Vector2 worldPos)
 	{
         return new Vector2(worldPos.x - 2.0f * worldPos.y, worldPos.x + 2.0f * worldPos.y);
+	}
+
+    private Vector2 CollisionHandle(Vector2 worldDir)
+	{
+        return new Vector2();
 	}
 }
