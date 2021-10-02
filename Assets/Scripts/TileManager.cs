@@ -55,7 +55,7 @@ public class TileManager : MonoBehaviour
 
         public Vector3 ToTransformPosition()
         {
-            return new Vector3(this.X, this.Y, 0);
+            return new Vector3(0.5f * this.X + 0.5f * this.Y, -0.25f * this.X + 0.25f * this.Y, this.Y - this.X);
         }
     }
 
