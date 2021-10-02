@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     public TileManager.TilePos pos;
     public bool canMove = true;
     public bool canPush = true;
+    public bool jumpedOff = false; 
+
     [SerializeField] private float jumpTime = 0.5f;
     [SerializeField] private Sprite[] mySprites;
     private SpriteRenderer myRenderer;
@@ -92,24 +94,34 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator MoveToTile(TileManager.TilePos newTile)
 	{
-        Vector2 startPos = this.transform.position;
-        Vector2 targetPos = GetPosInWorldSpace(newTile);
+        Vector3 startPos = this.transform.position;
+        Vector3 targetPos = newTile.ToTransformPosition();
+        targetPos.z -= 2;
         float currentStepDelta = 0.0f;
         canMove = false;
+        canPush = false;
+        jumpedOff = false;
 
-        // Play some animation
-        // Insert a sound or smth
-        
-        while(currentStepDelta < 1)
+		// Play some animation
+		// Insert a sound or smth
+
+		while (!jumpedOff)
 		{
-            Vector2 curr = startPos + currentStepDelta * (targetPos - startPos);
-            transform.position = new Vector3(curr.x, curr.y, transform.position.z);
+            yield return null;
+		}
+        jumpedOff = false;
+
+        while (currentStepDelta < 1)
+		{
+            transform.position = startPos + currentStepDelta * (targetPos - startPos);
             currentStepDelta += Time.deltaTime / jumpTime;
             yield return null;
 		}
+
+        // Player arrived at the new tile
         pos = newTile;
         canMove = true; // Put in animation
-        AdjustDepth();
+        canPush = true; // Put in animation
         
         // check win condition
         if (this.myLevel.Get(pos).HasFlag)
@@ -122,11 +134,6 @@ public class PlayerController : MonoBehaviour
     private void AdjustDepth()
 	{
         this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, -2.0f + pos.Y - pos.X);
-	}
-
-    private Vector2 GetPosInWorldSpace(TileManager.TilePos tile)
-	{
-        return new Vector2(0.5f * tile.X + 0.5f * tile.Y, -0.25f * tile.X + 0.25f * tile.Y);
 	}
 
     private bool TileClear(TileManager.TilePos checkPos)

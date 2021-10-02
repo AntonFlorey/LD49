@@ -86,7 +86,8 @@ public class TileManager : MonoBehaviour
 
         public static Vector3 CoordsToTransformPosition(float x, float y)
         {
-            return new Vector3(0.5f * x + 0.5f * y, -0.25f * x + 0.25f * y, y - x);   
+            float offsetScale = 1.4f;
+            return new Vector3(0.5f * offsetScale * x + 0.5f * offsetScale * y, -0.25f * offsetScale * x + 0.25f * offsetScale * y, y - x);   
         }
 
         public Vector3 ToTransformPosition()
