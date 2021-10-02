@@ -20,14 +20,10 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-
-
         if (canMove)
 		{
             this.Move();
-            this.AdjustDepth();
 		}
-        Debug.Log(Input.GetAxis("Horizontal").ToString());
     }
 
     private void Move()
