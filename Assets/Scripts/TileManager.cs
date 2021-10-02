@@ -57,7 +57,7 @@ public class TileManager : MonoBehaviour
         public readonly TileType Type;
         public TileComponent Comp;
         public bool HasFlag = false;
-        public bool Walkable = true;
+        public bool HasRock = false;
 
         public Tile(TileType type)
         {
@@ -122,7 +122,12 @@ public class TileManager : MonoBehaviour
                 if (entry.Value.HasFlag)
                 {
                     var flagObj = Instantiate(manager.flagPrefab, Vector3.zero, Quaternion.identity, obj.transform);
-                    flagObj.transform.localPosition = new Vector3(0f, 0.5f, -2f);
+                    flagObj.transform.localPosition = new Vector3(0f, 0f, -2f);
+                }
+                if (entry.Value.HasRock)
+				{
+                    var rockObj = Instantiate(manager.rockPrefab, Vector3.zero, Quaternion.identity, obj.transform);
+                    rockObj.transform.localPosition = new Vector3(0f, 0f, -2f);
                 }
             }
             // make player
@@ -232,6 +237,16 @@ public class TileManager : MonoBehaviour
                         tile = new Tile(GrassFull);
                         tile.HasFlag = true;
                     }
+                    else if (code == 'X')
+					{
+                        tile = new Tile(Unmovable);
+                        tile.HasRock = true;
+					}
+                    else if (code == 'O')
+					{
+                        tile = new Tile(GrassFull);
+                        tile.HasRock = true;
+					}
                     else
                     {
                         tile = new Tile(TileType.FromCode(code));

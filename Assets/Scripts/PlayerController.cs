@@ -108,7 +108,7 @@ public class PlayerController : MonoBehaviour
             yield return null;
 		}
         pos = newTile;
-        canMove = true;
+        canMove = true; // Put in animation
         AdjustDepth();
         
         // check win condition
@@ -131,6 +131,6 @@ public class PlayerController : MonoBehaviour
 
     private bool TileClear(TileManager.TilePos checkPos)
 	{
-        return myLevel.Get(checkPos) != null && myLevel.Get(checkPos).Walkable;
+        return myLevel.Get(checkPos) != null && !myLevel.Get(checkPos).HasRock;
 	}
 }
