@@ -1,20 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
-using UnityEditor.UI;
 using UnityEngine;
 
 public class TileManager : MonoBehaviour
 {
-    public static TileType GrassFull = new TileType('o');
-    public static TileType Grass4 = new TileType('4');
-    public static TileType Grass3 = new TileType('3');
-    public static TileType Grass2 = new TileType('2');
-    public static TileType Grass1 = new TileType('1');
+    public static TileType GrassFull = new TileType('o', true);
+    public static TileType Grass4 = new TileType('4', true);
+    public static TileType Grass3 = new TileType('3', true);
+    public static TileType Grass2 = new TileType('2', true);
+    public static TileType Grass1 = new TileType('1', true);
     
     public TextAsset[] levelTextAssets;
     public GameObject grassFullTilePrefab;
@@ -25,16 +17,20 @@ public class TileManager : MonoBehaviour
     private Dictionary<TileType, GameObject> tilePrefabs = new Dictionary<TileType, GameObject>();
 
     public GameObject playerPrefab;
+
+    public Level currentLevel = null;
     
     public class TileType
     {
         private static readonly Dictionary<char, TileType> byCode = new Dictionary<char, TileType>();
         public readonly char Code;
+        public readonly bool Movable;
 
-        public TileType(char code)
+        public TileType(char code, bool movable)
         {
             this.Code = code;
             byCode.Add(code, this);
+            this.Movable = movable;
         }
 
         public static TileType FromCode(char code)
@@ -46,12 +42,12 @@ public class TileManager : MonoBehaviour
     public class Tile
     {
         public readonly TileType Type;
-        public GameObject Object;
+        public TileComponent Comp;
 
         public Tile(TileType type)
         {
             this.Type = type;
-            this.Object = null;
+            this.Comp = null;
         }
     }
 
@@ -65,6 +61,13 @@ public class TileManager : MonoBehaviour
             this.X = x;
             this.Y = y;
         }
+        
+        public static TilePos operator +(TilePos a, TilePos b) => new TilePos(a.X + b.X, a.Y + b.Y);
+
+        public override string ToString()
+        {
+            return "(" + this.X + "," + this.Y + ")";
+        }
 
         public Vector3 ToTransformPosition()
         {
@@ -72,11 +75,16 @@ public class TileManager : MonoBehaviour
         }
     }
 
+
     public class Level
     {
         public readonly Dictionary<TilePos, Tile> Tiles;
         private TileManager Manager;
         private GameObject player;
+
+        public bool StepActive = false;
+        public float CurrentStepDelta = 0.0f;
+        public float StepLength = 2.0f;  // in seconds
 
         public Level(Dictionary<TilePos, Tile> tiles, TilePos playerPos, TileManager manager)
         {
@@ -86,11 +94,80 @@ public class TileManager : MonoBehaviour
             // make tiles
             foreach (var entry in tiles)
             {
-                var obj = Instantiate(manager.tilePrefabs[entry.Value.Type], entry.Key.ToTransformPosition(), Quaternion.identity);
-                entry.Value.Object = obj;
+                var pos = entry.Key;
+                var obj = Instantiate(manager.tilePrefabs[entry.Value.Type], pos.ToTransformPosition(), Quaternion.identity);
+                var comp = obj.GetComponent<TileComponent>();
+                comp.Level = this;
+                comp.TilePos = pos;
+                comp.PrevPos = pos;
+                entry.Value.Comp = comp;
             }
             // make player
             this.player = Instantiate(manager.playerPrefab, playerPos.ToTransformPosition(), Quaternion.identity);
+        }
+
+        public Tile Get(TilePos pos)
+        {
+            if (this.Tiles.ContainsKey(pos))
+                return this.Tiles[pos];
+            return null;
+        }
+
+        public void Set(TilePos pos, Tile newTile)
+        {
+            if (newTile == null)
+                this.Tiles.Remove(pos);
+            else
+                this.Tiles[pos] = newTile;
+        }
+
+        public void Update()
+        {
+            if (!StepActive)
+                return;
+            CurrentStepDelta += Time.deltaTime / StepLength;
+            if (CurrentStepDelta > 1.0f)
+                this.UpdateStep();
+        }
+
+        private void UpdateStep()
+        {
+            this.StepActive = false;
+            this.CurrentStepDelta = 0.0f;
+            foreach (var entry in this.Tiles)
+            {
+                entry.Value.Comp.UpdateStep();
+            }
+        }
+
+        public bool CanShiftTiles(TilePos pos, TilePos direction)
+        {
+            var new_pos = pos + direction;
+            while (this.Get(new_pos) != null)
+            {
+                if (this.Get(new_pos) != null && !this.Get(new_pos).Type.Movable)
+                    return false;
+                new_pos = new_pos + direction;
+            }
+            return true;
+        }
+
+        public void ShiftTiles(TilePos pos, TilePos direction)
+        {
+            if (this.StepActive)
+                this.UpdateStep();
+            pos = pos + direction;
+            Tile tileBefore = null;
+            while (this.Get(pos) != null)
+            {
+                Tile tile = this.Get(pos);
+                tile.Comp.DoMoveTo(pos + direction);
+                this.Set(pos, tileBefore);
+                tileBefore = tile;
+                pos = pos + direction;
+            }
+            this.Set(pos, tileBefore);
+            this.StepActive = true;
         }
     }
     
@@ -134,6 +211,17 @@ public class TileManager : MonoBehaviour
         this.tilePrefabs[Grass2] = grass2TilePrefab;
         this.tilePrefabs[Grass1] = grass1TilePrefab;
 
-        LoadLevelFromTextAsset(this.levelTextAssets[0]);
+        this.currentLevel = LoadLevelFromTextAsset(this.levelTextAssets[0]);
+
+        if (this.currentLevel.CanShiftTiles(new TilePos(0, 0), new TilePos(1, 0)))
+        {
+            this.currentLevel.ShiftTiles(new TilePos(0, 0), new TilePos(1, 0));
+        }
+    }
+
+    private void Update()
+    {
+        if (this.currentLevel != null)
+            this.currentLevel.Update();
     }
 }
