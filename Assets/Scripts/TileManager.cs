@@ -24,15 +24,6 @@ public class TileManager : MonoBehaviour
     public GameObject grass1TilePrefab;
     private Dictionary<TileType, GameObject> tilePrefabs = new Dictionary<TileType, GameObject>();
 
-    public TileManager()
-    {
-        tilePrefabs[GrassFull] = grassFullTilePrefab;
-        tilePrefabs[Grass4] = grass4TilePrefab;
-        tilePrefabs[Grass3] = grass3TilePrefab;
-        tilePrefabs[Grass2] = grass2TilePrefab;
-        tilePrefabs[Grass1] = grass1TilePrefab;
-    }
-    
     public class TileType
     {
         private static readonly Dictionary<char, TileType> byCode = new Dictionary<char, TileType>();
@@ -116,7 +107,12 @@ public class TileManager : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("test");
+        this.tilePrefabs[GrassFull] = grassFullTilePrefab;
+        this.tilePrefabs[Grass4] = grass4TilePrefab;
+        this.tilePrefabs[Grass3] = grass3TilePrefab;
+        this.tilePrefabs[Grass2] = grass2TilePrefab;
+        this.tilePrefabs[Grass1] = grass1TilePrefab;
+
         LoadLevelFromTextAsset(this.levelTextAssets[0]);
     }
 }
