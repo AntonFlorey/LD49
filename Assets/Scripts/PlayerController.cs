@@ -117,16 +117,25 @@ public class PlayerController : MonoBehaviour
 		}
         
 
-        while (currentStepDelta < 1)
+        while (currentStepDelta < 1.0f)
 		{
             transform.position = startPos + currentStepDelta * (targetPos - startPos);
             currentStepDelta += Time.deltaTime / jumpTime;
             yield return null;
 		}
+        // Set the target position (safety)
+        transform.position = targetPos;
 
         // Player arrived at the new tile
         pos = newTile;
-        
+
+		while (myAnimator.GetCurrentAnimatorStateInfo(-1).IsName("JumpDown"))
+		{
+            yield return null;
+		}
+        myAnimator.speed = 1.0f;
+
+            
         // check win condition
         if (this.myLevel.Get(pos).HasFlag)
         {
