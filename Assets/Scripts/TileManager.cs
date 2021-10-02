@@ -275,7 +275,7 @@ public class TileManager : MonoBehaviour
             largePos = new TilePos(Math.Max(pos.X, largePos.X), Math.Max(pos.Y, largePos.Y));
         }
 
-        var center = TilePos.CoordsToTransformPosition(largePos.X - smallPos.X, largePos.Y - smallPos.Y);
+        var center = 0.5f * (smallPos + largePos + new TilePos(-2, 2)).ToTransformPosition();
         this.myCamera.transform.localPosition =
             new Vector3(center.x, center.y, this.myCamera.transform.localPosition.z);
     }
