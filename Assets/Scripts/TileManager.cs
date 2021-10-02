@@ -230,7 +230,7 @@ public class TileManager : MonoBehaviour
                     Tile tile;
                     if (code == 'A')
                     {
-                        tile = new Tile(GrassFull);
+                        tile = new Tile(Unmovable);
                         playerPos = pos;
                     }
                     else if (code == 'F')
@@ -275,8 +275,7 @@ public class TileManager : MonoBehaviour
             largePos = new TilePos(Math.Max(pos.X, largePos.X), Math.Max(pos.Y, largePos.Y));
         }
 
-        var center = TilePos.CoordsToTransformPosition(0.5f * (largePos.X - smallPos.X + 1),
-            0.5f * (largePos.Y - smallPos.Y + 1));
+        var center = 0.5f * (smallPos + largePos + new TilePos(-2, 2)).ToTransformPosition();
         this.myCamera.transform.localPosition =
             new Vector3(center.x, center.y, this.myCamera.transform.localPosition.z);
     }
