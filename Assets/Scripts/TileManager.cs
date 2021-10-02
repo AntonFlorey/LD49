@@ -169,6 +169,7 @@ public class TileManager : MonoBehaviour
         public bool CanShiftTiles(TilePos pos, TilePos direction)
         {
             var new_pos = pos + direction;
+            if (this.Get(new_pos) == null) return false;
             while (this.Get(new_pos) != null)
             {
                 if (this.Get(new_pos) != null && !this.Get(new_pos).Type.Movable)
