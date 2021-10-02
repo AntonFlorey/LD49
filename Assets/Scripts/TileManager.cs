@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TileManager : MonoBehaviour
 {
+    public static TileType Unmovable = new TileType('x', false);
     public static TileType GrassFull = new TileType('o', true);
     public static TileType Grass4 = new TileType('4', true);
     public static TileType Grass3 = new TileType('3', true);
@@ -11,6 +12,7 @@ public class TileManager : MonoBehaviour
     public static TileType Grass1 = new TileType('1', true);
     
     public TextAsset[] levelTextAssets;
+    public GameObject unmovableTilePrefab;
     public GameObject grassFullTilePrefab;
     public GameObject grass4TilePrefab;
     public GameObject grass3TilePrefab;
@@ -209,6 +211,7 @@ public class TileManager : MonoBehaviour
 
     private void Start()
     {
+        this.tilePrefabs[Unmovable] = unmovableTilePrefab;
         this.tilePrefabs[GrassFull] = grassFullTilePrefab;
         this.tilePrefabs[Grass4] = grass4TilePrefab;
         this.tilePrefabs[Grass3] = grass3TilePrefab;
