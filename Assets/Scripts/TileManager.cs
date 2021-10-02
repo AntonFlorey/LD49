@@ -290,11 +290,6 @@ public class TileManager : MonoBehaviour
         this.tilePrefabs[Grass1] = grass1TilePrefab;
         
         RestartCurrentLevel();
-
-        if (this.currentLevel.CanShiftTiles(new TilePos(0, 0), new TilePos(1, 0)))
-        {
-            this.currentLevel.ShiftTiles(new TilePos(0, 0), new TilePos(1, 0));
-        }
     }
 
     private void Update()
