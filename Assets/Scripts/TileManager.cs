@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using UnityEditor.UI;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TileManager : MonoBehaviour
 {
@@ -22,8 +25,12 @@ public class TileManager : MonoBehaviour
 
     public GameObject playerPrefab;
     public GameObject flagPrefab;
+    
+    public Text currentLevelText;
 
+    public int currentLevelId = 0;
     public Level currentLevel = null;
+    public Camera myCamera;
     
     public class TileType
     {
@@ -75,9 +82,14 @@ public class TileManager : MonoBehaviour
             return "(" + this.X + "," + this.Y + ")";
         }
 
+        public static Vector3 CoordsToTransformPosition(float x, float y)
+        {
+            return new Vector3(0.5f * x + 0.5f * y, -0.25f * x + 0.25f * y, y - x);   
+        }
+
         public Vector3 ToTransformPosition()
         {
-            return new Vector3(0.5f * this.X + 0.5f * this.Y, -0.25f * this.X + 0.25f * this.Y, this.Y - this.X);
+            return CoordsToTransformPosition(this.X, this.Y);
         }
     }
 
@@ -181,6 +193,15 @@ public class TileManager : MonoBehaviour
             this.Set(pos, tileBefore);
             this.StepActive = true;
         }
+
+        public void Cleanup()
+        {
+            foreach (var tile in this.Tiles.Values)
+            {
+                Destroy(tile.Comp.gameObject);
+            }
+            Destroy(playerComp.gameObject);
+        }
     }
     
         
@@ -220,6 +241,27 @@ public class TileManager : MonoBehaviour
         return new Level(tiles, playerPos, this);
     }
 
+    private void RestartCurrentLevel()
+    {
+        if (this.currentLevel != null)
+            this.currentLevel.Cleanup();
+        this.currentLevelText.text = "Level " + (currentLevelId + 1);
+        this.currentLevel = LoadLevelFromTextAsset(this.levelTextAssets[currentLevelId]);
+
+        TilePos smallPos = new TilePos(Int32.MaxValue, Int32.MaxValue);
+        TilePos largePos = new TilePos(Int32.MinValue, Int32.MinValue);
+        foreach (var pos in this.currentLevel.Tiles.Keys)
+        {
+            smallPos = new TilePos(Math.Min(pos.X, smallPos.X), Math.Min(pos.Y, smallPos.Y));
+            largePos = new TilePos(Math.Max(pos.X, largePos.X), Math.Max(pos.Y, largePos.Y));
+        }
+
+        var center = TilePos.CoordsToTransformPosition(0.5f * (largePos.X - smallPos.X + 1),
+            0.5f * (largePos.Y - smallPos.Y + 1));
+        this.myCamera.transform.localPosition =
+            new Vector3(center.x, center.y, this.myCamera.transform.localPosition.z);
+    }
+
     private void Start()
     {
         this.tilePrefabs[Unmovable] = unmovableTilePrefab;
@@ -228,8 +270,8 @@ public class TileManager : MonoBehaviour
         this.tilePrefabs[Grass3] = grass3TilePrefab;
         this.tilePrefabs[Grass2] = grass2TilePrefab;
         this.tilePrefabs[Grass1] = grass1TilePrefab;
-
-        this.currentLevel = LoadLevelFromTextAsset(this.levelTextAssets[0]);
+        
+        RestartCurrentLevel();
 
         if (this.currentLevel.CanShiftTiles(new TilePos(0, 0), new TilePos(1, 0)))
         {
@@ -239,6 +281,10 @@ public class TileManager : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown("r"))
+        {
+            this.RestartCurrentLevel();
+        }
         if (this.currentLevel != null)
             this.currentLevel.Update();
     }
