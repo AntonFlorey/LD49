@@ -25,6 +25,7 @@ public class TileManager : MonoBehaviour
 
     public GameObject playerPrefab;
     public GameObject flagPrefab;
+    public GameObject rockPrefab;
     
     public Text currentLevelText;
 
