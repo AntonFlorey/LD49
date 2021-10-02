@@ -103,6 +103,12 @@ public class PlayerController : MonoBehaviour
         canMove = true;
         AdjustDepth();
         
+        // check win condition
+        if (this.myLevel.Get(pos).HasFlag)
+        {
+	        this.myLevel.Manager.currentLevelId++;
+	        this.myLevel.Manager.RestartCurrentLevel();
+        }
 	}
 
     private void AdjustDepth()
@@ -115,9 +121,8 @@ public class PlayerController : MonoBehaviour
         return new Vector2(0.5f * tile.X + 0.5f * tile.Y, -0.25f * tile.X + 0.25f * tile.Y);
 	}
 
-    // TODO UPDATE THIS
     private bool TileClear(TileManager.TilePos checkPos)
 	{
-        return myLevel.Get(checkPos) != null;
+        return myLevel.Get(checkPos) != null && myLevel.Get(checkPos).Type.Walkable;
 	}
 }

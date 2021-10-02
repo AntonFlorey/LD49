@@ -7,12 +7,12 @@ using UnityEngine.UI;
 
 public class TileManager : MonoBehaviour
 {
-    public static TileType Unmovable = new TileType('x', false);
-    public static TileType GrassFull = new TileType('o', true);
-    public static TileType Grass4 = new TileType('4', true);
-    public static TileType Grass3 = new TileType('3', true);
-    public static TileType Grass2 = new TileType('2', true);
-    public static TileType Grass1 = new TileType('1', true);
+    public static TileType Unmovable = new TileType('x', false, true);
+    public static TileType GrassFull = new TileType('o', true, true);
+    public static TileType Grass4 = new TileType('4', true, true);
+    public static TileType Grass3 = new TileType('3', true, true);
+    public static TileType Grass2 = new TileType('2', true, true);
+    public static TileType Grass1 = new TileType('1', true, true);
     
     public TextAsset[] levelTextAssets;
     public GameObject unmovableTilePrefab;
@@ -37,12 +37,14 @@ public class TileManager : MonoBehaviour
         private static readonly Dictionary<char, TileType> byCode = new Dictionary<char, TileType>();
         public readonly char Code;
         public readonly bool Movable;
+        public readonly bool Walkable;
 
-        public TileType(char code, bool movable)
+        public TileType(char code, bool movable, bool walkable)
         {
             this.Code = code;
             byCode.Add(code, this);
             this.Movable = movable;
+            this.Walkable = walkable;
         }
 
         public static TileType FromCode(char code)
@@ -97,7 +99,7 @@ public class TileManager : MonoBehaviour
     public class Level
     {
         public readonly Dictionary<TilePos, Tile> Tiles;
-        private TileManager Manager;
+        public TileManager Manager;
         private PlayerController playerComp;
 
         public bool StepActive = false;
@@ -241,7 +243,7 @@ public class TileManager : MonoBehaviour
         return new Level(tiles, playerPos, this);
     }
 
-    private void RestartCurrentLevel()
+    public void RestartCurrentLevel()
     {
         if (this.currentLevel != null)
             this.currentLevel.Cleanup();
