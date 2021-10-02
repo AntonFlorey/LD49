@@ -89,9 +89,8 @@ public class PlayerController : MonoBehaviour
         return new Vector2(0.5f * tile.X + 0.5f * tile.Y, -0.25f * tile.X + 0.25f * tile.Y);
 	}
 
-    // TODO UPDATE THIS
     private bool TileClear(TileManager.TilePos checkPos)
 	{
-        return myLevel.Get(checkPos) != null;
+        return myLevel.Get(checkPos) != null && myLevel.Get(checkPos).Type.Walkable;
 	}
 }
