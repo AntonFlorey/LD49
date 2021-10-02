@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -34,19 +35,12 @@ public class PlayerController : MonoBehaviour
 
     private void PushTiles()
 	{
-        Dictionary<KeyCode, TileManager.TilePos> test = new Dictionary<KeyCode, TileManager.TilePos>();
-        test.Add(KeyCode.RightArrow, new TileManager.TilePos(1, 0));
-        test.Add(KeyCode.LeftArrow, new TileManager.TilePos(-1, 0));
-        test.Add(KeyCode.UpArrow, new TileManager.TilePos(0, 1));
-        test.Add(KeyCode.DownArrow, new TileManager.TilePos(0, -1));
+		var dir = this.GetInputDir(new[] { KeyCode.UpArrow, KeyCode.RightArrow, KeyCode.DownArrow, KeyCode.LeftArrow });
+		if (dir.X == 0 && dir.Y == 0)
+			return;
 
-        foreach (var entry in test)
-		{
-            if (Input.GetKeyDown(entry.Key) && myLevel.CanShiftTiles(pos, entry.Value))
-			{
-                PushTiles(entry.Value);
-			}
-		}
+        if (myLevel.CanShiftTiles(pos, dir))
+            PushTiles(dir);
     }
 
     private void PushTiles(TileManager.TilePos pushDir)
@@ -58,28 +52,42 @@ public class PlayerController : MonoBehaviour
         canPush = true; // remove this later on
 	}
 
-    private void Move()
-	{
-        Dictionary<KeyCode, TileManager.TilePos> test = new Dictionary<KeyCode, TileManager.TilePos>();
-        test.Add(KeyCode.D, new TileManager.TilePos(1, 0));
-        test.Add(KeyCode.A, new TileManager.TilePos(-1, 0));
-        test.Add(KeyCode.W, new TileManager.TilePos(0, 1));
-        test.Add(KeyCode.S, new TileManager.TilePos(0, -1));
-
-        foreach (var entry in test){
-            if (Input.GetKey(entry.Key))
-            {
-                // Toggle sprite flipX
-                myRenderer.flipX = entry.Value.X == -1 || entry.Value.Y == -1;
-
-                TileManager.TilePos newPos = pos + entry.Value;
-                if (TileClear(newPos))
-                {
-                    StartCoroutine(MoveToTile(newPos));
-                }
-                return;
+    private TileManager.TilePos GetInputDir(KeyCode[] keys)
+    {
+	    // WD -> up
+	    // DS -> right
+	    // ...
+	    // e.g. var keys = new[] { KeyCode.W, KeyCode.D, KeyCode.S, KeyCode.A };
+	    var dirs = new[] { new TileManager.TilePos(0, 1), new TileManager.TilePos(1, 0), new TileManager.TilePos(0, -1), new TileManager.TilePos(-1, 0) };
+	    
+	    for (var pos = 0; pos < keys.Length; pos++)
+	    {
+		    var nextPos = (pos + 1) % keys.Length;
+		    var oppositePos = (pos + 2) % keys.Length;
+		    var nextOppositePos = (pos + 3) % keys.Length;
+		    var down = Input.GetKey(keys[pos]);
+		    var nextDown = Input.GetKey(keys[nextPos]);
+		    if ((down && nextDown) || (down && this.myLevel.Get(this.pos + dirs[nextOppositePos]) == null) || (nextDown && this.myLevel.Get(this.pos + dirs[nextPos]) == null))
+		    {
+			    return dirs[pos];
             }
         }
+
+	    return new TileManager.TilePos(0, 0);
+    }
+
+    private void Move()
+    {
+	    var dir = this.GetInputDir(new[] { KeyCode.W, KeyCode.D, KeyCode.S, KeyCode.A });
+	    if (dir.X == 0 && dir.Y == 0)
+		    return;
+
+	    // Toggle sprite flipX
+	    myRenderer.flipX = dir.X == -1 || dir.Y == -1;
+
+	    var newPos = this.pos + dir;
+	    if (TileClear(newPos))
+		    StartCoroutine(MoveToTile(newPos));
     }
 
     IEnumerator MoveToTile(TileManager.TilePos newTile)
