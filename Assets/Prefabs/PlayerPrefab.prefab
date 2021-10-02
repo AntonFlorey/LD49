@@ -96,4 +96,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canMove: 1
+  canPush: 1
+  jumpTime: 0.3
   mySprites: []

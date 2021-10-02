@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     // Some attributes
     public TileManager.TilePos pos;
     public bool canMove = true;
+    public bool canPush = true;
     [SerializeField] private float jumpTime = 0.5f;
     [SerializeField] private Sprite[] mySprites;
     private SpriteRenderer myRenderer;
@@ -15,6 +16,7 @@ public class PlayerController : MonoBehaviour
 	private void Start()
 	{
         myRenderer = this.GetComponent<SpriteRenderer>();
+        AdjustDepth();
 	}
 
 	// Update is called once per frame
@@ -24,7 +26,37 @@ public class PlayerController : MonoBehaviour
 		{
             this.Move();
 		}
+        if (canPush)
+		{
+            this.PushTiles();
+		}
     }
+
+    private void PushTiles()
+	{
+        Dictionary<KeyCode, TileManager.TilePos> test = new Dictionary<KeyCode, TileManager.TilePos>();
+        test.Add(KeyCode.RightArrow, new TileManager.TilePos(1, 0));
+        test.Add(KeyCode.LeftArrow, new TileManager.TilePos(-1, 0));
+        test.Add(KeyCode.UpArrow, new TileManager.TilePos(0, 1));
+        test.Add(KeyCode.DownArrow, new TileManager.TilePos(0, -1));
+
+        foreach (var entry in test)
+		{
+            if (Input.GetKeyDown(entry.Key) && myLevel.CanShiftTiles(pos, entry.Value))
+			{
+                PushTiles(entry.Value);
+			}
+		}
+    }
+
+    private void PushTiles(TileManager.TilePos pushDir)
+	{
+        canPush = false;
+        // Play animation
+        // Play sound
+        myLevel.ShiftTiles(pos, pushDir);
+        canPush = true; // remove this later on
+	}
 
     private void Move()
 	{
