@@ -159,6 +159,7 @@ MonoBehaviour:
   grass3TilePrefab: {fileID: 0}
   grass2TilePrefab: {fileID: 0}
   grass1TilePrefab: {fileID: 0}
+  playerPrefab: {fileID: 2130075903939326781, guid: a2a278800092bcdedbbe4468e7098dc4, type: 3}
 --- !u!4 &274094169
 Transform:
   m_ObjectHideFlags: 0
