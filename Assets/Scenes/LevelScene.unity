@@ -154,12 +154,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelTextAssets:
   - {fileID: 4900000, guid: 3124b9c76400d68bbbde99710279fd4f, type: 3}
-  grassFullTilePrefab: {fileID: 2130075903939326781, guid: 1e59a997be4b5fcfcb2b765405a2d890, type: 3}
+  unmovableTilePrefab: {fileID: 2130075903939326781, guid: eb1c8aff1c1cf7fe68067fdd9224f843, type: 3}
+  grassFullTilePrefab: {fileID: 2130075903939326781, guid: 5f9651653cec6247c9b3ad5a018394c7, type: 3}
   grass4TilePrefab: {fileID: 0}
   grass3TilePrefab: {fileID: 0}
   grass2TilePrefab: {fileID: 0}
   grass1TilePrefab: {fileID: 0}
   playerPrefab: {fileID: 2130075903939326781, guid: a2a278800092bcdedbbe4468e7098dc4, type: 3}
+  flagPrefab: {fileID: 2130075903939326781, guid: 4bad27ce6cd9918a3b04fa72f75b5604, type: 3}
 --- !u!4 &274094169
 Transform:
   m_ObjectHideFlags: 0

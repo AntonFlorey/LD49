@@ -21,6 +21,7 @@ public class TileManager : MonoBehaviour
     private Dictionary<TileType, GameObject> tilePrefabs = new Dictionary<TileType, GameObject>();
 
     public GameObject playerPrefab;
+    public GameObject flagPrefab;
 
     public Level currentLevel = null;
     
@@ -47,6 +48,7 @@ public class TileManager : MonoBehaviour
     {
         public readonly TileType Type;
         public TileComponent Comp;
+        public bool HasFlag = false;
 
         public Tile(TileType type)
         {
@@ -101,10 +103,13 @@ public class TileManager : MonoBehaviour
                 var pos = entry.Key;
                 var obj = Instantiate(manager.tilePrefabs[entry.Value.Type], pos.ToTransformPosition(), Quaternion.identity);
                 var comp = obj.GetComponent<TileComponent>();
-                comp.Level = this;
-                comp.TilePos = pos;
-                comp.PrevPos = pos;
+                comp.Init(this, pos);
                 entry.Value.Comp = comp;
+                if (entry.Value.HasFlag)
+                {
+                    var flagObj = Instantiate(manager.flagPrefab, Vector3.zero, Quaternion.identity, obj.transform);
+                    flagObj.transform.localPosition = new Vector3(0f, 0.5f, -2f);
+                }
             }
             // make player
             var player = Instantiate(manager.playerPrefab, playerPos.ToTransformPosition(), Quaternion.identity);
@@ -191,17 +196,22 @@ public class TileManager : MonoBehaviour
                 if (code != ' ')
                 {
                     var pos = new TilePos(x, y);
-                    TileType tileType;
+                    Tile tile;
                     if (code == 'A')
                     {
-                        tileType = GrassFull;
+                        tile = new Tile(GrassFull);
                         playerPos = pos;
+                    }
+                    else if (code == 'F')
+                    {
+                        tile = new Tile(GrassFull);
+                        tile.HasFlag = true;
                     }
                     else
                     {
-                        tileType = TileType.FromCode(code);
+                        tile = new Tile(TileType.FromCode(code));
                     }
-                    tiles.Add(pos, new Tile(tileType));
+                    tiles.Add(pos, tile);
                 }
             }
         }
