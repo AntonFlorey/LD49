@@ -10,8 +10,28 @@ using UnityEngine;
 
 public class TileManager : MonoBehaviour
 {
+    public static TileType GrassFull = new TileType('o');
+    public static TileType Grass4 = new TileType('4');
+    public static TileType Grass3 = new TileType('3');
+    public static TileType Grass2 = new TileType('2');
+    public static TileType Grass1 = new TileType('1');
+    
     public TextAsset[] levelTextAssets;
-    public GameObject tilePrefab;
+    public GameObject grassFullTilePrefab;
+    public GameObject grass4TilePrefab;
+    public GameObject grass3TilePrefab;
+    public GameObject grass2TilePrefab;
+    public GameObject grass1TilePrefab;
+    private Dictionary<TileType, GameObject> tilePrefabs = new Dictionary<TileType, GameObject>();
+
+    public TileManager()
+    {
+        tilePrefabs[GrassFull] = grassFullTilePrefab;
+        tilePrefabs[Grass4] = grass4TilePrefab;
+        tilePrefabs[Grass3] = grass3TilePrefab;
+        tilePrefabs[Grass2] = grass2TilePrefab;
+        tilePrefabs[Grass1] = grass1TilePrefab;
+    }
     
     public class TileType
     {
@@ -30,8 +50,6 @@ public class TileManager : MonoBehaviour
         }
     }
     
-    public static TileType Grass = new TileType('o');
-
     public class Tile
     {
         public readonly TileType Type;
@@ -62,16 +80,16 @@ public class TileManager : MonoBehaviour
     public class Level
     {
         public readonly Dictionary<TilePos, Tile> Tiles;
-        private GameObject TilePrefab;
+        private TileManager Manager;
 
-        public Level(Dictionary<TilePos, Tile> tiles, GameObject tilePrefab)
+        public Level(Dictionary<TilePos, Tile> tiles, TileManager manager)
         {
             this.Tiles = tiles;
-            this.TilePrefab = tilePrefab;
+            this.Manager = manager;
 
             foreach (var entry in tiles)
             {
-                Instantiate(tilePrefab, entry.Key.ToTransformPosition(), Quaternion.identity);
+                Instantiate(manager.tilePrefabs[entry.Value.Type], entry.Key.ToTransformPosition(), Quaternion.identity);
             }
         }
     }
@@ -93,7 +111,7 @@ public class TileManager : MonoBehaviour
             }
         }
 
-        return new Level(tiles, tilePrefab: this.tilePrefab);
+        return new Level(tiles, this);
     }
 
     private void Start()
