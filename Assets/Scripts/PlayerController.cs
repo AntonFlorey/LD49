@@ -5,9 +5,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     // Some attributes
-    [SerializeField] private float speed = 1;
+    public TileManager.TilePos pos;
     public bool canMove = true;
-    private Vector2 direction;
+    [SerializeField] private float jumpTime = 0.5f;
     [SerializeField] private Sprite[] mySprites;
     private SpriteRenderer myRenderer;
     public TileManager.Level myLevel;
@@ -20,10 +20,11 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
+
+
         if (canMove)
 		{
             this.Move();
-            this.ToggleSprite();
             this.AdjustDepth();
 		}
         Debug.Log(Input.GetAxis("Horizontal").ToString());
@@ -31,63 +32,64 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
 	{
-        float x = Input.GetAxis("Horizontal");
-        float y = Input.GetAxis("Vertical");
-        direction = new Vector2(x, y);
-        direction = CollisionHandle(direction);
-        this.transform.position += speed * new Vector3(direction.x, direction.y, 0) * Time.deltaTime;
+        Dictionary<KeyCode, TileManager.TilePos> test = new Dictionary<KeyCode, TileManager.TilePos>();
+        test.Add(KeyCode.D, new TileManager.TilePos(1, 0));
+        test.Add(KeyCode.A, new TileManager.TilePos(-1, 0));
+        test.Add(KeyCode.W, new TileManager.TilePos(0, 1));
+        test.Add(KeyCode.S, new TileManager.TilePos(0, -1));
+
+        foreach (var entry in test){
+            if (Input.GetKey(entry.Key))
+            {
+                // Toggle sprite flipX
+                myRenderer.flipX = entry.Value.X == -1 || entry.Value.Y == -1;
+
+                TileManager.TilePos newPos = pos + entry.Value;
+                if (TileClear(newPos))
+                {
+                    StartCoroutine(MoveToTile(newPos));
+                }
+                return;
+            }
+        }
     }
+
+    IEnumerator MoveToTile(TileManager.TilePos newTile)
+	{
+        Vector2 startPos = this.transform.position;
+        Vector2 targetPos = GetPosInWorldSpace(newTile);
+        float currentStepDelta = 0.0f;
+        canMove = false;
+
+        // Play some animation
+        // Insert a sound or smth
+        
+        while(currentStepDelta < 1)
+		{
+            Vector2 curr = startPos + currentStepDelta * (targetPos - startPos);
+            transform.position = new Vector3(curr.x, curr.y, transform.position.z);
+            currentStepDelta += Time.deltaTime / jumpTime;
+            yield return null;
+		}
+        pos = newTile;
+        canMove = true;
+        AdjustDepth();
+        
+	}
 
     private void AdjustDepth()
 	{
-        Vector2 posInTileSpace = GetPosInTileSpace(this.transform.position);
-        this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, -2.0f + posInTileSpace.y - posInTileSpace.x);
+        this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, -2.0f + pos.Y - pos.X);
 	}
 
-    private void ToggleSprite()
+    private Vector2 GetPosInWorldSpace(TileManager.TilePos tile)
 	{
-        myRenderer.flipX = direction.x < 0;
+        return new Vector2(0.5f * tile.X + 0.5f * tile.Y, -0.25f * tile.X + 0.25f * tile.Y);
 	}
 
-    private Vector2 GetPosInTileSpace(Vector2 worldPos)
+    // TODO UPDATE THIS
+    private bool TileClear(TileManager.TilePos checkPos)
 	{
-        return new Vector2(worldPos.x - 2.0f * worldPos.y, worldPos.x + 2.0f * worldPos.y);
-	}
-
-    private Vector2 GetPosInWorldSpace(Vector2 tilePos)
-	{
-        return new Vector2(0.5f * tilePos.x + 0.5f * tilePos.y, -0.25f * tilePos.x + 0.25f * tilePos.y);
-	}
-
-    private Vector2 CollisionHandle(Vector2 worldDir)
-	{
-        Vector2 tilePos = GetPosInTileSpace(transform.position);
-        Vector2 tileDir = GetPosInTileSpace(worldDir);
-        tileDir.Normalize();
-        if(tileDir.x != 0.0f)
-		{
-            float horizontal = tileDir.x >= 0 ? 0.5f : -0.5f;
-            TileManager.TilePos checkTile = new TileManager.TilePos(Mathf.RoundToInt(tilePos.x + horizontal), Mathf.RoundToInt(tilePos.y));
-
-            // TODO CHANGE TO OBSTACLE CHECK
-            if (myLevel.Get(checkTile) == null)
-			{
-                tileDir.x = 0;
-			}
-            
-		}
-        if (tileDir.y != 0.0f)
-        {
-            float vertical = tileDir.y >= 0 ? 0.5f : -0.5f;
-            TileManager.TilePos checkTile = new TileManager.TilePos(Mathf.RoundToInt(tilePos.x), Mathf.RoundToInt(tilePos.y + vertical));
-
-            // TODO CHANGE TO OBSTACLE CHECK
-            if (myLevel.Get(checkTile) == null)
-            {
-                tileDir.y = 0;
-            }
-
-        }
-        return GetPosInWorldSpace(tileDir);
+        return myLevel.Get(checkPos) != null;
 	}
 }

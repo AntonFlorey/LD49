@@ -115,6 +115,7 @@ public class TileManager : MonoBehaviour
             var player = Instantiate(manager.playerPrefab, playerPos.ToTransformPosition(), Quaternion.identity);
             this.playerComp = player.GetComponent<PlayerController>();
             this.playerComp.myLevel = this;
+            this.playerComp.pos = playerPos;
         }
 
         public Tile Get(TilePos pos)
