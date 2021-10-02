@@ -67,7 +67,8 @@ public class PlayerController : MonoBehaviour
 		    var nextOppositePos = (pos + 3) % keys.Length;
 		    var down = Input.GetKey(keys[pos]);
 		    var nextDown = Input.GetKey(keys[nextPos]);
-		    if ((down && nextDown) || (down && this.myLevel.Get(this.pos + dirs[nextOppositePos]) == null) || (nextDown && this.myLevel.Get(this.pos + dirs[nextPos]) == null))
+		    var othersDown = Input.GetKey(keys[oppositePos]) || Input.GetKey(keys[nextOppositePos]);
+		    if ((down && nextDown) || (down && this.myLevel.Get(this.pos + dirs[nextOppositePos]) == null && !othersDown) || (nextDown && this.myLevel.Get(this.pos + dirs[nextPos]) == null && !othersDown))
 		    {
 			    return dirs[pos];
             }
