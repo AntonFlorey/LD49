@@ -659,7 +659,9 @@ MonoBehaviour:
   grass3TileSprite: {fileID: -2554972679103285264, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
   grass2TileSprite: {fileID: 8553936927198527006, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
   grass1TileSprite: {fileID: -8866006837411747052, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
-  replantedSprite: {fileID: -4475892385933594388, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
+  replantedSprite: {fileID: 1423314081576901956, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
+  replanted2Sprite: {fileID: 1934313062113103263, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
+  replanted3Sprite: {fileID: -8212451729691591928, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
   firstLevelExplanations:
   - {fileID: 2030796132}
   - {fileID: 1707406426}
@@ -672,6 +674,9 @@ MonoBehaviour:
   currentLevelText: {fileID: 813533590}
   currentLevelId: 13
   myCamera: {fileID: 1414344224}
+  replantsEverything: 0
+  replantingTime: 0
+  pushTogetherDelay: 4
 --- !u!4 &274094169
 Transform:
   m_ObjectHideFlags: 0
@@ -1400,52 +1405,7 @@ MonoBehaviour:
   windSpeed: 1
   wobbleCurve:
     serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: -0.0004119873
-      value: 0
-      inSlope: -5.767522
-      outSlope: -5.767522
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.17396641
-      value: -1.0057312
-      inSlope: -0.056028526
-      outSlope: -0.056028526
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.13241142
-    - serializedVersion: 3
-      time: 0.35479712
-      value: -0.48065555
-      inSlope: -0.07001206
-      outSlope: -0.07001206
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.5221552
-    - serializedVersion: 3
-      time: 0.56195134
-      value: -0.6926296
-      inSlope: 0.082283944
-      outSlope: 0.082283944
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.21530692
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 1.5811704
-      outSlope: 1.5811704
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
+    m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class TileManager : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class TileManager : MonoBehaviour
     public static TileType Grass4 = new TileType('4', true, true, Grass3);
     public static TileType GrassFull = new TileType('o', true, true, Grass4);
     public static TileType Replanted = new TileType('v', true, false, null);
+    public static TileType Replanted2 = new TileType('w', true, false, null);
+    public static TileType Replanted3 = new TileType('u', true, false, null);
 
     public TextAsset[] levelTextAssets;
     public GameObject tilePrefab;
@@ -24,6 +27,8 @@ public class TileManager : MonoBehaviour
     public Sprite grass2TileSprite;
     public Sprite grass1TileSprite;
     public Sprite replantedSprite;
+    public Sprite replanted2Sprite;
+    public Sprite replanted3Sprite;
     public Dictionary<TileType, Sprite> tileSprites = new Dictionary<TileType, Sprite>();
 
     public GameObject[] firstLevelExplanations;
@@ -283,7 +288,9 @@ public class TileManager : MonoBehaviour
         {
             if (Get(pos) == null)
                 return;
-            Get(pos).Comp.DoChangeTo(Replanted);
+            var replanted = new[] { Replanted, Replanted2, Replanted3 };
+            var tile = replanted[Random.Range(0, replanted.Length)];
+            Get(pos).Comp.DoChangeTo(tile);
         }
     
         public IEnumerator ReplantFromCenter()
@@ -296,6 +303,7 @@ public class TileManager : MonoBehaviour
 
             HashSet<TilePos> replanted = new HashSet<TilePos>();
             replanted.Add(startPos);
+            this.MaybeReplantTile(startPos);
             for (int rad = 1; rad < radius; rad++)
             {
                 HashSet<TilePos> nexts = new HashSet<TilePos>();
@@ -319,7 +327,6 @@ public class TileManager : MonoBehaviour
         }
     }
     
-        
     public Level LoadLevelFromTextAsset(TextAsset textAsset)
     {
         var lines = Regex.Split(textAsset.text, "\r\n|\r|\n");
@@ -412,6 +419,8 @@ public class TileManager : MonoBehaviour
         this.tileSprites[Grass2] = grass2TileSprite;
         this.tileSprites[Grass1] = grass1TileSprite;
         this.tileSprites[Replanted] = replantedSprite;
+        this.tileSprites[Replanted2] = replanted2Sprite;
+        this.tileSprites[Replanted3] = replanted3Sprite;
         
         RestartCurrentLevel();
         if (currentLevelId < firstLevelExplanations.Length)
@@ -425,6 +434,7 @@ public class TileManager : MonoBehaviour
             if (replantingTime < pushTogetherDelay)
                 replantingTime += Time.deltaTime;
             TilePos.offsetScale = Mathf.Max(1f, Mathf.Lerp(1.4f, 1f, replantingTime / pushTogetherDelay));
+            return;
         }
         if (this.fadingOutLevel != null)
         {
