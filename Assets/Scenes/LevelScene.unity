@@ -153,11 +153,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelTextAssets:
-  - {fileID: 4900000, guid: 3124b9c76400d68bbbde99710279fd4f, type: 3}
+  - {fileID: 4900000, guid: 43794b23811ebdda59a37fbb2d3bf032, type: 3}
+  - {fileID: 4900000, guid: 0bd8495bb396537ca92c615c9c869db9, type: 3}
   - {fileID: 4900000, guid: 490c6d211b4e0afa9a2177772a60728c, type: 3}
   - {fileID: 4900000, guid: 25da15c65094c74c9bde55b0728e7bbf, type: 3}
   - {fileID: 4900000, guid: 1b4274d3e295c23e085e25968f9db3a1, type: 3}
   - {fileID: 4900000, guid: 85547ea9fdbc2de4aa32c8ce5424757f, type: 3}
+  - {fileID: 4900000, guid: 0f6e47deceb7b8056a3964fe56be3be8, type: 3}
   - {fileID: 4900000, guid: b050f43d38766836b879fd71eccc93c4, type: 3}
   - {fileID: 4900000, guid: 3ec6c34c67883759695ae280eefe6112, type: 3}
   - {fileID: 4900000, guid: 96fca36525efe2634ac73d1e5841848d, type: 3}
@@ -172,7 +174,7 @@ MonoBehaviour:
   flagPrefab: {fileID: 2130075903939326781, guid: 4bad27ce6cd9918a3b04fa72f75b5604, type: 3}
   rockPrefab: {fileID: 2130075903939326781, guid: 0eced06bd61ce514faa42382911f6346, type: 3}
   currentLevelText: {fileID: 813533590}
-  currentLevelId: 4
+  currentLevelId: 0
   myCamera: {fileID: 1414344224}
 --- !u!4 &274094169
 Transform:

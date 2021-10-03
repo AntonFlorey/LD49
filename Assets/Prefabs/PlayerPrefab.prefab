@@ -130,7 +130,7 @@ MonoBehaviour:
   canMove: 1
   canPush: 1
   jumpedOff: 0
-  jumpTime: 0.1
+  jumpTime: 0.15
   mySprites: []
 --- !u!95 &-5848014061816965765
 Animator:
