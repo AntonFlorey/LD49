@@ -5,8 +5,8 @@ public class TileComponent : MonoBehaviour
     public TileManager.Level Level;
     public TileManager.TilePos TilePos = new TileManager.TilePos(0, 0);
     private TileManager.TilePos prevPos = new TileManager.TilePos(0, 0);
-    [SerializeField] private Transform blockTransform;
-    private Ocean myOcean;
+    [SerializeField] public Transform blockTransform;
+    public Ocean myOcean;
 
     private bool changingType = false;
     private TileManager.TileType changingToType = null;
