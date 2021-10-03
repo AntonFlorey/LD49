@@ -149,12 +149,12 @@ public class TileManager : MonoBehaviour
                 entry.Value.Comp = comp;
                 if (entry.Value.HasFlag)
                 {
-                    var flagObj = Instantiate(manager.flagPrefab, Vector3.zero, Quaternion.identity, tileObj.transform);
+                    var flagObj = Instantiate(manager.flagPrefab, Vector3.zero, Quaternion.identity, comp.blockTransform);
                     flagObj.transform.localPosition = new Vector3(0f, 0f, -2f);
                 }
                 if (entry.Value.HasRock)
 				{
-                    var rockObj = Instantiate(manager.rockPrefab, Vector3.zero, Quaternion.identity, tileObj.transform);
+                    var rockObj = Instantiate(manager.rockPrefab, Vector3.zero, Quaternion.identity, comp.blockTransform);
                     rockObj.transform.localPosition = new Vector3(0f, 0f, -2f);
                 }
             }

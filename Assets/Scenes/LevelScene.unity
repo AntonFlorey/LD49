@@ -286,32 +286,21 @@ MonoBehaviour:
   - {fileID: 4900000, guid: 3ec6c34c67883759695ae280eefe6112, type: 3}
   - {fileID: 4900000, guid: 96fca36525efe2634ac73d1e5841848d, type: 3}
   - {fileID: 4900000, guid: a5ebf812f4cb35fe6a0530b6cf737990, type: 3}
-  tilePrefab: {fileID: 2130075903939326781, guid: 1e59a997be4b5fcfcb2b765405a2d890,
-    type: 3}
-  unmovableTileSprite: {fileID: -4475892385933594388, guid: e124fcc8d3ca35c48b1c697443de0cba,
-    type: 3}
-  grassFullTileSprite: {fileID: 6467616030678447296, guid: e124fcc8d3ca35c48b1c697443de0cba,
-    type: 3}
-  grass4TileSprite: {fileID: -6054059912019769826, guid: e124fcc8d3ca35c48b1c697443de0cba,
-    type: 3}
-  grass3TileSprite: {fileID: -2554972679103285264, guid: e124fcc8d3ca35c48b1c697443de0cba,
-    type: 3}
-  grass2TileSprite: {fileID: 8553936927198527006, guid: e124fcc8d3ca35c48b1c697443de0cba,
-    type: 3}
-  grass1TileSprite: {fileID: -8866006837411747052, guid: e124fcc8d3ca35c48b1c697443de0cba,
-    type: 3}
+  tilePrefab: {fileID: 2130075903939326781, guid: 1e59a997be4b5fcfcb2b765405a2d890, type: 3}
+  unmovableTileSprite: {fileID: -4475892385933594388, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
+  grassFullTileSprite: {fileID: 6467616030678447296, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
+  grass4TileSprite: {fileID: -6054059912019769826, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
+  grass3TileSprite: {fileID: -2554972679103285264, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
+  grass2TileSprite: {fileID: 8553936927198527006, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
+  grass1TileSprite: {fileID: -8866006837411747052, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
   firstLevelExplanations:
   - {fileID: 2030796132}
   - {fileID: 1707406426}
   - {fileID: 407296784}
-  levelPrefab: {fileID: 7792577022782798477, guid: 1c2da30605da68f79b92825df6001529,
-    type: 3}
-  playerPrefab: {fileID: 2130075903939326781, guid: a2a278800092bcdedbbe4468e7098dc4,
-    type: 3}
-  flagPrefab: {fileID: 2130075903939326781, guid: 4bad27ce6cd9918a3b04fa72f75b5604,
-    type: 3}
-  rockPrefab: {fileID: 2130075903939326781, guid: 0eced06bd61ce514faa42382911f6346,
-    type: 3}
+  levelPrefab: {fileID: 7792577022782798477, guid: 1c2da30605da68f79b92825df6001529, type: 3}
+  playerPrefab: {fileID: 2130075903939326781, guid: a2a278800092bcdedbbe4468e7098dc4, type: 3}
+  flagPrefab: {fileID: 2130075903939326781, guid: 4bad27ce6cd9918a3b04fa72f75b5604, type: 3}
+  rockPrefab: {fileID: 2130075903939326781, guid: 0eced06bd61ce514faa42382911f6346, type: 3}
   currentLevelText: {fileID: 813533590}
   currentLevelId: 0
   myCamera: {fileID: 1414344224}
@@ -523,57 +512,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &652600106
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 652600108}
-  - component: {fileID: 652600107}
-  m_Layer: 0
-  m_Name: Ocean
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &652600107
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 652600106}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9258361936f4c6647a75cba89dc060ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waveAmplitude: 0.1
-  waveSpeed: 0.63
-  waveFrequency: 0.58
-  waveDirection: {x: 1, y: 0.5}
-  noiseIntensity: 0.1
-  noiseFrequency: 0.2
-  windDirection: {x: 0, y: 0}
-  windSpeed: 1
---- !u!4 &652600108
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 652600106}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &431557903
 GameObject:
   m_ObjectHideFlags: 0
@@ -1016,6 +954,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 537968148}
   m_CullTransparentMesh: 1
+--- !u!1 &652600106
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 652600108}
+  - component: {fileID: 652600107}
+  m_Layer: 0
+  m_Name: Ocean
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &652600107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 652600106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9258361936f4c6647a75cba89dc060ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waveAmplitude: 0.1
+  waveSpeed: 0.63
+  waveFrequency: 0.58
+  waveDirection: {x: 1, y: 0.5}
+  noiseIntensity: 0.1
+  noiseFrequency: 0.2
+  windDirection: {x: 0, y: 0}
+  windSpeed: 1
+--- !u!4 &652600108
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 652600106}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &774909486
 GameObject:
   m_ObjectHideFlags: 0
@@ -1367,9 +1356,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Push unstable
+  m_Text: 'Push away
 
-    ground tiles
+    floating logs
 
 '
 --- !u!222 &815328958
@@ -1790,7 +1779,8 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: [{fileID: 473160471}]
+  m_Children:
+  - {fileID: 473160471}
   m_Father: {fileID: 407296785}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1832,7 +1822,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Reset a level anytime
+  m_Text: 'Reset a level if you''re stuck
 
 '
 --- !u!222 &1009638429
@@ -2233,7 +2223,11 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: [{fileID: 104595726}, {fileID: 810860441}, {fileID: 1626796814}, {fileID: 1947848195}]
+  m_Children:
+  - {fileID: 104595726}
+  - {fileID: 810860441}
+  - {fileID: 1626796814}
+  - {fileID: 1947848195}
   m_Father: {fileID: 2030796133}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
