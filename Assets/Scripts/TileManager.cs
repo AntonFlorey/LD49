@@ -14,6 +14,7 @@ public class TileManager : MonoBehaviour
     public static TileType Grass3 = new TileType('3', true, true, Grass2);
     public static TileType Grass4 = new TileType('4', true, true, Grass3);
     public static TileType GrassFull = new TileType('o', true, true, Grass4);
+    public static TileType FlagTile = new TileType('F', false, false, null);
     public static TileType Replanted = new TileType('v', true, false, null);
     public static TileType Replanted2 = new TileType('w', true, false, null);
     public static TileType Replanted3 = new TileType('u', true, false, null);
@@ -26,6 +27,7 @@ public class TileManager : MonoBehaviour
     public Sprite grass3TileSprite;
     public Sprite grass2TileSprite;
     public Sprite grass1TileSprite;
+    public Sprite flagTileSprite;
     public Sprite replantedSprite;
     public Sprite replanted2Sprite;
     public Sprite replanted3Sprite;
@@ -288,7 +290,7 @@ public class TileManager : MonoBehaviour
         {
             if (Get(pos) == null)
                 return;
-            var replanted = new[] { Replanted, Replanted2, Replanted3 };
+            var replanted = new[] { Replanted, Replanted2, Replanted3, FlagTile};
             var tile = replanted[Random.Range(0, replanted.Length)];
             Get(pos).Comp.DoChangeTo(tile);
         }
@@ -418,6 +420,7 @@ public class TileManager : MonoBehaviour
         this.tileSprites[Grass3] = grass3TileSprite;
         this.tileSprites[Grass2] = grass2TileSprite;
         this.tileSprites[Grass1] = grass1TileSprite;
+        this.tileSprites[FlagTile] = flagTileSprite;
         this.tileSprites[Replanted] = replantedSprite;
         this.tileSprites[Replanted2] = replanted2Sprite;
         this.tileSprites[Replanted3] = replanted3Sprite;
