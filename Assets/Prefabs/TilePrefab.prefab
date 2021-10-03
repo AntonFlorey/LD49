@@ -5037,6 +5037,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockTransform: {fileID: 6945651528422607215}
   myOcean: {fileID: 0}
+  pushedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 5.9601817
+      outSlope: 5.9601817
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.06987484
+    - serializedVersion: 3
+      time: 0.26805592
+      value: 0.7070046
+      inSlope: 1.1023896
+      outSlope: 1.1023896
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.16657013
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7806436224761368512
 GameObject:
   m_ObjectHideFlags: 0

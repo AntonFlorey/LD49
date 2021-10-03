@@ -7,6 +7,7 @@ public class TileComponent : MonoBehaviour
     private TileManager.TilePos prevPos = new TileManager.TilePos(0, 0);
     [SerializeField] public Transform blockTransform;
     public Ocean myOcean;
+    [SerializeField] private AnimationCurve pushedCurve;
 
     private bool changingType = false;
     private TileManager.TileType changingToType = null;
@@ -36,7 +37,7 @@ public class TileComponent : MonoBehaviour
     {
         var fromPos = this.prevPos.ToTransformPosition();
         var toPos = this.TilePos.ToTransformPosition();
-        this.transform.localPosition = fromPos + this.Level.CurrentStepDelta * (toPos - fromPos);
+        this.transform.localPosition = fromPos + pushedCurve.Evaluate(this.Level.CurrentStepDelta) * (toPos - fromPos);
         float x = transform.localPosition.x;
         float y = transform.localPosition.y;
         blockTransform.localPosition = new Vector3(0.0f, myOcean.GetOceanHeight(TileManager.TilePos.TransformToTileCoords(x, y)), blockTransform.localPosition.z);

@@ -672,7 +672,7 @@ MonoBehaviour:
   flagPrefab: {fileID: 2130075903939326781, guid: 4bad27ce6cd9918a3b04fa72f75b5604, type: 3}
   rockPrefab: {fileID: 2130075903939326781, guid: 0eced06bd61ce514faa42382911f6346, type: 3}
   currentLevelText: {fileID: 813533590}
-  currentLevelId: 13
+  currentLevelId: 2
   myCamera: {fileID: 1414344224}
   replantsEverything: 0
   replantingTime: 0
@@ -1395,17 +1395,62 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9258361936f4c6647a75cba89dc060ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveAmplitude: 0.1
+  waveAmplitude: 0
   waveSpeed: 0.63
   waveFrequency: 0.58
   waveDirection: {x: 1, y: 0.5}
-  noiseIntensity: 0.1
+  noiseIntensity: 0
   noiseFrequency: 0.2
   windDirection: {x: 0, y: 0}
   windSpeed: 1
   wobbleCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -7.684348
+      outSlope: -7.684348
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.13013466
+      value: -1
+      inSlope: -0.022998383
+      outSlope: -0.022998383
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.12370524
+    - serializedVersion: 3
+      time: 0.36154506
+      value: -0.4205144
+      inSlope: 0.15772773
+      outSlope: 0.15772773
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.20057395
+    - serializedVersion: 3
+      time: 0.60756373
+      value: -0.788478
+      inSlope: -0.12042668
+      outSlope: -0.12042668
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.2361311
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 2.0091875
+      outSlope: 2.0091875
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4

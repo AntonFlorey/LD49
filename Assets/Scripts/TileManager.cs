@@ -144,7 +144,7 @@ public class TileManager : MonoBehaviour
         public GameObject obj;
         public bool StepActive = false;
         public float CurrentStepDelta = 0.0f;
-        public float StepLength = 2.0f;  // in seconds
+        public float StepLength = 1.0f;  // in seconds
 
         public Level(Dictionary<TilePos, Tile> tiles, TilePos playerPos, Vector3 levelPos, TileManager manager)
         {
@@ -163,7 +163,7 @@ public class TileManager : MonoBehaviour
                 if (entry.Value.HasFlag)
                 {
                     var flagObj = Instantiate(manager.flagPrefab, Vector3.zero, Quaternion.identity, comp.blockTransform);
-                    flagObj.transform.localPosition = new Vector3(0f, 0f, -2f);
+                    flagObj.transform.localPosition = new Vector3(0f, 0f, -1.9f);
                 }
                 if (entry.Value.HasRock)
 				{
