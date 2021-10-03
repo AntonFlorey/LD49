@@ -6,21 +6,22 @@ using UnityEngine.UI;
 
 public class TileManager : MonoBehaviour
 {
-    public static TileType Unmovable = new TileType('x', false);
-    public static TileType GrassFull = new TileType('o', true);
-    public static TileType Grass4 = new TileType('4', true);
-    public static TileType Grass3 = new TileType('3', true);
-    public static TileType Grass2 = new TileType('2', true);
-    public static TileType Grass1 = new TileType('1', true);
-    
+    public static TileType Unmovable = new TileType('x', false, false, null);
+    public static TileType Grass1 = new TileType('1', true, true, null);
+    public static TileType Grass2 = new TileType('2', true, true, Grass1);
+    public static TileType Grass3 = new TileType('3', true, true, Grass2);
+    public static TileType Grass4 = new TileType('4', true, true, Grass3);
+    public static TileType GrassFull = new TileType('o', true, true, Grass4);
+
     public TextAsset[] levelTextAssets;
-    public GameObject unmovableTilePrefab;
-    public GameObject grassFullTilePrefab;
-    public GameObject grass4TilePrefab;
-    public GameObject grass3TilePrefab;
-    public GameObject grass2TilePrefab;
-    public GameObject grass1TilePrefab;
-    private Dictionary<TileType, GameObject> tilePrefabs = new Dictionary<TileType, GameObject>();
+    public GameObject tilePrefab;
+    public Sprite unmovableTileSprite;
+    public Sprite grassFullTileSprite;
+    public Sprite grass4TileSprite;
+    public Sprite grass3TileSprite;
+    public Sprite grass2TileSprite;
+    public Sprite grass1TileSprite;
+    public Dictionary<TileType, Sprite> tileSprites = new Dictionary<TileType, Sprite>();
 
     public GameObject[] firstLevelExplanations;
 
@@ -39,12 +40,16 @@ public class TileManager : MonoBehaviour
         private static readonly Dictionary<char, TileType> byCode = new Dictionary<char, TileType>();
         public readonly char Code;
         public readonly bool Movable;
+        public readonly bool Decays;
+        public readonly TileType DecaysTo;
 
-        public TileType(char code, bool movable)
+        public TileType(char code, bool movable, bool decays, TileType decaysTo)
         {
             this.Code = code;
             byCode.Add(code, this);
             this.Movable = movable;
+            this.Decays = decays;
+            this.DecaysTo = decaysTo;
         }
 
         public static TileType FromCode(char code)
@@ -55,7 +60,7 @@ public class TileManager : MonoBehaviour
     
     public class Tile
     {
-        public readonly TileType Type;
+        public TileType Type;
         public TileComponent Comp;
         public bool HasFlag = false;
         public bool HasRock = false;
@@ -106,6 +111,7 @@ public class TileManager : MonoBehaviour
     public class Level
     {
         public readonly Dictionary<TilePos, Tile> Tiles;
+        public readonly HashSet<Tile> DeletedTiles = new HashSet<Tile>();
         public TileManager Manager;
         private PlayerController playerComp;
 
@@ -122,9 +128,9 @@ public class TileManager : MonoBehaviour
             foreach (var entry in tiles)
             {
                 var pos = entry.Key;
-                var obj = Instantiate(manager.tilePrefabs[entry.Value.Type], pos.ToTransformPosition(), Quaternion.identity);
+                var obj = Instantiate(manager.tilePrefab, pos.ToTransformPosition(), Quaternion.identity);
                 var comp = obj.GetComponent<TileComponent>();
-                comp.Init(this, pos);
+                comp.Init(this, manager.tileSprites[entry.Value.Type], pos);
                 entry.Value.Comp = comp;
                 if (entry.Value.HasFlag)
                 {
@@ -173,9 +179,10 @@ public class TileManager : MonoBehaviour
             this.StepActive = false;
             this.CurrentStepDelta = 0.0f;
             foreach (var entry in this.Tiles)
-            {
                 entry.Value.Comp.UpdateStep();
-            }
+            foreach (var tile in this.DeletedTiles)
+                tile.Comp.UpdateStep();
+            this.DeletedTiles.Clear();
         }
 
         public bool CanShiftTiles(TilePos pos, TilePos direction)
@@ -201,6 +208,17 @@ public class TileManager : MonoBehaviour
             {
                 Tile tile = this.Get(pos);
                 tile.Comp.DoMoveTo(pos + direction);
+                if (tile.Type.Decays)
+                {
+                    tile.Comp.DoChangeTo(tile.Type.DecaysTo);
+                    if (tile.Type.DecaysTo != null)
+                        tile.Type = tile.Type.DecaysTo;
+                    else
+                    {
+                        this.DeletedTiles.Add(tile);
+                        tile = null;
+                    }
+                }
                 this.Set(pos, tileBefore);
                 tileBefore = tile;
                 pos = pos + direction;
@@ -212,9 +230,7 @@ public class TileManager : MonoBehaviour
         public void Cleanup()
         {
             foreach (var tile in this.Tiles.Values)
-            {
                 Destroy(tile.Comp.gameObject);
-            }
             Destroy(playerComp.gameObject);
         }
     }
@@ -293,12 +309,12 @@ public class TileManager : MonoBehaviour
 
     private void Start()
     {
-        this.tilePrefabs[Unmovable] = unmovableTilePrefab;
-        this.tilePrefabs[GrassFull] = grassFullTilePrefab;
-        this.tilePrefabs[Grass4] = grass4TilePrefab;
-        this.tilePrefabs[Grass3] = grass3TilePrefab;
-        this.tilePrefabs[Grass2] = grass2TilePrefab;
-        this.tilePrefabs[Grass1] = grass1TilePrefab;
+        this.tileSprites[Unmovable] = unmovableTileSprite;
+        this.tileSprites[GrassFull] = grassFullTileSprite;
+        this.tileSprites[Grass4] = grass4TileSprite;
+        this.tileSprites[Grass3] = grass3TileSprite;
+        this.tileSprites[Grass2] = grass2TileSprite;
+        this.tileSprites[Grass1] = grass1TileSprite;
         
         RestartCurrentLevel();
     }

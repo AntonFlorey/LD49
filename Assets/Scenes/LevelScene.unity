@@ -165,12 +165,13 @@ MonoBehaviour:
   - {fileID: 4900000, guid: 3ec6c34c67883759695ae280eefe6112, type: 3}
   - {fileID: 4900000, guid: 96fca36525efe2634ac73d1e5841848d, type: 3}
   - {fileID: 4900000, guid: a5ebf812f4cb35fe6a0530b6cf737990, type: 3}
-  unmovableTilePrefab: {fileID: 2130075903939326781, guid: eb1c8aff1c1cf7fe68067fdd9224f843, type: 3}
-  grassFullTilePrefab: {fileID: 2130075903939326781, guid: 5f9651653cec6247c9b3ad5a018394c7, type: 3}
-  grass4TilePrefab: {fileID: 2130075903939326781, guid: 2bf60364c1e19a982ac2f94347556f8d, type: 3}
-  grass3TilePrefab: {fileID: 2130075903939326781, guid: d18ac05945395f6e4b062c6aff077579, type: 3}
-  grass2TilePrefab: {fileID: 2130075903939326781, guid: 5152b73377c5eacb2944b9aa3d788f3c, type: 3}
-  grass1TilePrefab: {fileID: 2130075903939326781, guid: 1de0b83534ea6cf35bbadf3762a08172, type: 3}
+  tilePrefab: {fileID: 2130075903939326781, guid: 1e59a997be4b5fcfcb2b765405a2d890, type: 3}
+  unmovableTileSprite: {fileID: -4475892385933594388, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
+  grassFullTileSprite: {fileID: 6467616030678447296, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
+  grass4TileSprite: {fileID: -6054059912019769826, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
+  grass3TileSprite: {fileID: -2554972679103285264, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
+  grass2TileSprite: {fileID: 8553936927198527006, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
+  grass1TileSprite: {fileID: -8866006837411747052, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
   firstLevelExplanations:
   - {fileID: 2030796132}
   - {fileID: 1707406426}
@@ -179,7 +180,7 @@ MonoBehaviour:
   flagPrefab: {fileID: 2130075903939326781, guid: 4bad27ce6cd9918a3b04fa72f75b5604, type: 3}
   rockPrefab: {fileID: 2130075903939326781, guid: 0eced06bd61ce514faa42382911f6346, type: 3}
   currentLevelText: {fileID: 813533590}
-  currentLevelId: 0
+  currentLevelId: 2
   myCamera: {fileID: 1414344224}
 --- !u!4 &274094169
 Transform:
