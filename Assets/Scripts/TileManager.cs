@@ -23,6 +23,8 @@ public class TileManager : MonoBehaviour
     public GameObject grass1TilePrefab;
     private Dictionary<TileType, GameObject> tilePrefabs = new Dictionary<TileType, GameObject>();
 
+    public GameObject[] firstLevelExplanations;
+
     public GameObject playerPrefab;
     public GameObject flagPrefab;
     public GameObject rockPrefab;
@@ -266,6 +268,11 @@ public class TileManager : MonoBehaviour
             this.currentLevel.Cleanup();
         this.currentLevelText.text = "Level " + (currentLevelId + 1);
         this.currentLevel = LoadLevelFromTextAsset(this.levelTextAssets[currentLevelId]);
+
+        foreach (var obj in firstLevelExplanations)
+            obj.SetActive(false);
+        if (currentLevelId < firstLevelExplanations.Length)
+            firstLevelExplanations[currentLevelId].SetActive(true);
 
         TilePos smallPos = new TilePos(Int32.MaxValue, Int32.MaxValue);
         TilePos largePos = new TilePos(Int32.MinValue, Int32.MinValue);
