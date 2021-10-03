@@ -5,6 +5,8 @@ public class TileComponent : MonoBehaviour
     public TileManager.Level Level;
     public TileManager.TilePos TilePos = new TileManager.TilePos(0, 0);
     private TileManager.TilePos prevPos = new TileManager.TilePos(0, 0);
+    [SerializeField] public Transform blockTransform;
+    public Ocean myOcean;
 
     private bool changingType = false;
     private TileManager.TileType changingToType = null;
@@ -13,8 +15,9 @@ public class TileComponent : MonoBehaviour
     {
         this.Level = level;
         this.TilePos = pos;
-        this.GetComponent<SpriteRenderer>().sprite = sprite;
+        this.GetComponentInChildren<SpriteRenderer>().sprite = sprite;
         this.prevPos = pos;
+        myOcean = GameObject.Find("Ocean").GetComponent<Ocean>();
     }
 
     public void DoMoveTo(TileManager.TilePos toPos)
@@ -34,6 +37,9 @@ public class TileComponent : MonoBehaviour
         var fromPos = this.prevPos.ToTransformPosition();
         var toPos = this.TilePos.ToTransformPosition();
         this.transform.localPosition = fromPos + this.Level.CurrentStepDelta * (toPos - fromPos);
+        float x = transform.localPosition.x;
+        float y = transform.localPosition.y;
+        blockTransform.localPosition = new Vector3(0.0f, myOcean.GetOceanHeight(TileManager.TilePos.TransformToTileCoords(x, y)), blockTransform.localPosition.z);
     }
 
     public void UpdateStep()

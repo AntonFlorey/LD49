@@ -17,17 +17,22 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer myRenderer;
     private Animator myAnimator;
     public TileManager.Level myLevel;
+    public Transform childRendererTransform;
+    private Ocean myOcean;
 
 	private void Start()
 	{
         myRenderer = this.GetComponentInChildren<SpriteRenderer>();
         myAnimator = this.GetComponent<Animator>();
+        myOcean = GameObject.Find("Ocean").GetComponent<Ocean>();
         AdjustDepth();
 	}
 
 	// Update is called once per frame
 	void Update()
-    {
+	{
+		if (this.myLevel.Manager.fadingOutLevel != null)
+			return;
         if (canMove)
 		{
             this.Move();
@@ -36,6 +41,14 @@ public class PlayerController : MonoBehaviour
 		{
             this.PushTiles();
 		}
+        // I dont know what im doing
+        if (canMove)
+		{
+            // Adjust height according to odean movement
+            float x = transform.localPosition.x;
+            float z = transform.localPosition.z;
+            transform.localPosition = new Vector3(x, myOcean.GetOceanHeight(new Vector2(pos.X, pos.Y)), z);
+        }
     }
 
     private void PushTiles()
@@ -111,7 +124,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator MoveToTile(TileManager.TilePos newTile)
 	{
-        Vector3 startPos = this.transform.position;
+        Vector3 startPos = this.transform.localPosition;
         Vector3 targetPos = newTile.ToTransformPosition();
         targetPos.z -= 2;
         float currentStepDelta = 0.0f;
@@ -133,12 +146,12 @@ public class PlayerController : MonoBehaviour
 
         while (currentStepDelta < 1.0f)
 		{
-            transform.position = startPos + currentStepDelta * (targetPos - startPos);
+            transform.localPosition = startPos + currentStepDelta * (targetPos - startPos);
             currentStepDelta += Time.deltaTime / jumpTime;
             yield return null;
 		}
         // Set the target position (safety)
-        transform.position = targetPos;
+        transform.localPosition = targetPos;
 
         // Player arrived at the new tile
         pos = newTile;
@@ -153,14 +166,13 @@ public class PlayerController : MonoBehaviour
         // check win condition
         if (this.myLevel.Get(pos).HasFlag)
         {
-	        this.myLevel.Manager.currentLevelId++;
-	        this.myLevel.Manager.RestartCurrentLevel();
+	        this.myLevel.Manager.ProgressToNextLevel();
         }
 	}
 
     private void AdjustDepth()
 	{
-        this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, -2.0f + pos.Y - pos.X);
+        this.transform.localPosition = new Vector3(this.transform.localPosition.x, this.transform.localPosition.y, -2.0f + pos.Y - pos.X);
 	}
 
     private bool TileClear(TileManager.TilePos checkPos)
