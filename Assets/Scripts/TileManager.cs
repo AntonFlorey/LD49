@@ -34,6 +34,7 @@ public class TileManager : MonoBehaviour
     public Dictionary<TileType, Sprite> tileSprites = new Dictionary<TileType, Sprite>();
 
     public GameObject[] firstLevelExplanations;
+    public GameObject finalLevelExplanation;
 
     public GameObject levelPrefab;
     public GameObject playerPrefab;
@@ -42,7 +43,7 @@ public class TileManager : MonoBehaviour
 
     public Text currentLevelText;
 
-    public int currentLevelId = 0;
+    public int currentLevelId = 1;
     public Level currentLevel = null;
     private Vector3 currentLevelOffset = Vector3.zero;
     public Camera myCamera;
@@ -53,8 +54,10 @@ public class TileManager : MonoBehaviour
 
     public bool replantsEverything = false;
     public float replantingTime = 0f;
-    public float pushTogetherDelay = 4f;
+    public float pushTogetherDelay = 10f;
+    public bool startedReplant = false;
 
+    private float fadingBackTime = 0f;
     public List<Level> pastLevels = new List<Level>();
     
     public class TileType
@@ -293,15 +296,17 @@ public class TileManager : MonoBehaviour
             var replanted = new[] { Replanted, Replanted2, Replanted3, FlagTile};
             var tile = replanted[Random.Range(0, replanted.Length)];
             Get(pos).Comp.DoChangeTo(tile);
+            Get(pos).Comp.myOcean.MakeWave(new Vector2(pos.X, pos.Y), 1, 0.5f, 0.5f);
         }
     
-        public IEnumerator ReplantFromCenter()
+        public IEnumerator ReplantFromPos(TilePos startPos)
         {
-            var startPos = this.playerComp.pos;
             var dims = this.GetDimensions();
-            var radius = Math.Max(dims.X, dims.Y);
+            var radius = Math.Max(dims.X, dims.Y) * 2;  // *2 because we use manhatten distance
             var dirs = new[]
                 { new TilePos(0, 1), new TilePos(0, -1), new TilePos(-1, 0), new TilePos(1, 0) };
+
+            var replantDelay = 0.15f * 10f / this.Tiles.Count;
 
             HashSet<TilePos> replanted = new HashSet<TilePos>();
             replanted.Add(startPos);
@@ -316,16 +321,28 @@ public class TileManager : MonoBehaviour
                         var next = old + dir;
                         if (replanted.Contains(next))
                             continue;
+                        nexts.Add(next);
                         if (Get(next) == null)
                             continue;
                         this.MaybeReplantTile(next);
                         this.UpdateStep();
-                        yield return new WaitForSeconds(0.2f);
-                        nexts.Add(next);
+                        yield return new WaitForSeconds(replantDelay);
                     }
                 }
                 replanted.UnionWith(nexts);
             }
+        }
+
+        public TilePos GetBottomRight()
+        {
+            TilePos smallPos = new TilePos(Int32.MaxValue, Int32.MaxValue);
+            TilePos largePos = new TilePos(Int32.MinValue, Int32.MinValue);
+            foreach (var pos in this.Tiles.Keys)
+            {
+                smallPos = new TilePos(Math.Min(pos.X, smallPos.X), Math.Min(pos.Y, smallPos.Y));
+                largePos = new TilePos(Math.Max(pos.X, largePos.X), Math.Max(pos.Y, largePos.Y));
+            }
+            return new TilePos(Math.Max(smallPos.X, largePos.X), Math.Min(smallPos.Y, largePos.Y));
         }
     }
     
@@ -350,7 +367,7 @@ public class TileManager : MonoBehaviour
                     }
                     else if (code == 'F')
                     {
-                        tile = new Tile(Unmovable);
+                        tile = new Tile(FlagTile);
                         tile.HasFlag = true;
                     }
                     else if (code == 'X')
@@ -386,11 +403,12 @@ public class TileManager : MonoBehaviour
     {
         if (this.currentLevel != null)
             this.currentLevel.Cleanup();
-        this.currentLevelText.text = "Level " + (currentLevelId + 1);
+        this.currentLevelText.text = "Level " + currentLevelId;
         this.currentLevel = LoadLevelFromTextAsset(this.levelTextAssets[currentLevelId]);
 
         foreach (var obj in firstLevelExplanations)
             obj.SetActive(false);
+        this.finalLevelExplanation.SetActive(false);
 
         var center = this.currentLevel.GetGlobalCenterPos();
         this.myCamera.transform.localPosition =
@@ -424,8 +442,23 @@ public class TileManager : MonoBehaviour
         this.tileSprites[Replanted] = replantedSprite;
         this.tileSprites[Replanted2] = replanted2Sprite;
         this.tileSprites[Replanted3] = replanted3Sprite;
-        
-        RestartCurrentLevel();
+
+        // this is just to restore the old state. just start at the beginning of the game, and all is fine anyway!!!
+        var numLevels = this.currentLevelId;
+        this.currentLevelId = 0;
+        for (int pastLevel = 0; pastLevel < numLevels; pastLevel++)
+        {
+            this.RestartCurrentLevel();
+            var verticalSize = myCamera.orthographicSize * 2.0f;
+            var horizontalSize = verticalSize * Screen.width / Screen.height;
+            var levelOffset = new Vector3(horizontalSize, -verticalSize, 0);
+            this.currentLevelOffset += levelOffset;
+            this.currentLevelId++;
+            Destroy(this.currentLevel.playerComp.gameObject);
+            this.pastLevels.Add(this.currentLevel);
+            this.currentLevel = null;
+        }
+        this.RestartCurrentLevel();
         if (currentLevelId < firstLevelExplanations.Length)
             firstLevelExplanations[currentLevelId].SetActive(true);
     }
@@ -435,8 +468,44 @@ public class TileManager : MonoBehaviour
         if (replantsEverything)
         {
             if (replantingTime < pushTogetherDelay)
+            {
                 replantingTime += Time.deltaTime;
-            TilePos.offsetScale = Mathf.Max(1f, Mathf.Lerp(1.4f, 1f, replantingTime / pushTogetherDelay));
+                TilePos.offsetScale = Mathf.Max(1f, Mathf.Lerp(1.4f, 1f, replantingTime / pushTogetherDelay));
+                this.startedReplant = false;
+                var myOcean = GameObject.Find("Ocean").GetComponent<Ocean>();
+                myOcean.noiseIntensity = Mathf.Lerp(0.1f, 0f, replantingTime / pushTogetherDelay);
+                myOcean.waveAmplitude = Mathf.Lerp(0.1f, 0f, replantingTime / pushTogetherDelay);
+            }
+
+            if (this.pastLevels.Count > 0)
+            {
+                var fadeBackTo = this.pastLevels[this.pastLevels.Count - 1];
+                var newCenter = Vector3.Lerp(this.currentLevel.GetGlobalCenterPos(),
+                    fadeBackTo.GetGlobalCenterPos(), this.fadingBackTime / this.levelFadeDelay);
+                var dist = Vector3.Distance(currentLevel.GetGlobalCenterPos(), fadeBackTo.GetGlobalCenterPos());
+                this.fadingBackTime += Time.deltaTime * (20f / dist);
+                this.myCamera.transform.position = new Vector3(newCenter.x, newCenter.y, this.myCamera.transform.position.z);
+                if (this.fadingBackTime >= this.levelFadeDelay * 0.5f && !this.startedReplant)
+                {
+                    if (this.pastLevels.Count > 1)
+                        this.currentLevelText.text = "Level " + (this.pastLevels.Count - 1);
+                    else 
+                        this.currentLevelText.text = "Thanks for playing!";
+                    StartCoroutine(fadeBackTo.ReplantFromPos(fadeBackTo.GetBottomRight()));
+                    this.startedReplant = true;
+                }
+                if (this.fadingBackTime >= this.levelFadeDelay)
+                {
+                    this.currentLevel = fadeBackTo;
+                    this.pastLevels.RemoveAt(this.pastLevels.Count - 1);
+                    this.fadingBackTime = 0f;
+                    this.startedReplant = false;
+                }
+            }
+            else
+            {
+                this.finalLevelExplanation.SetActive(true);
+            }
             return;
         }
         if (this.fadingOutLevel != null)
@@ -448,6 +517,8 @@ public class TileManager : MonoBehaviour
             if (this.fadingOutTime >= this.levelFadeDelay)
             {
                 // done.
+                Destroy(this.fadingOutLevel.playerComp.gameObject);
+                this.fadingOutLevel.playerComp = null;
                 this.pastLevels.Add(this.fadingOutLevel);
                 this.fadingOutLevel = null;
                 this.fadingOutTime = 0;
@@ -460,7 +531,7 @@ public class TileManager : MonoBehaviour
                     // in the last level, all tiles turn healthy again
                     replantsEverything = true;
                     replantingTime = 0;
-                    StartCoroutine(this.currentLevel.ReplantFromCenter());
+                    StartCoroutine(this.currentLevel.ReplantFromPos(this.currentLevel.playerComp.pos));
                 }
             }
             return;

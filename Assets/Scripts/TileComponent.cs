@@ -17,8 +17,7 @@ public class TileComponent : MonoBehaviour
         this.TilePos = pos;
         this.GetComponentInChildren<SpriteRenderer>().sprite = sprite;
         this.prevPos = pos;
-        myOcean = GameObject.Find("Ocean").GetComponent<Ocean>();
-    }
+`    }
 
     public void DoMoveTo(TileManager.TilePos toPos)
     {
