@@ -650,6 +650,8 @@ MonoBehaviour:
   - {fileID: 4900000, guid: 3ec6c34c67883759695ae280eefe6112, type: 3}
   - {fileID: 4900000, guid: 96fca36525efe2634ac73d1e5841848d, type: 3}
   - {fileID: 4900000, guid: a5ebf812f4cb35fe6a0530b6cf737990, type: 3}
+  - {fileID: 4900000, guid: e6afa020a4108c880bcac699d012bcf1, type: 3}
+  - {fileID: 4900000, guid: 1780a9a18849bd5aab0b8827dce7b8de, type: 3}
   tilePrefab: {fileID: 2130075903939326781, guid: 1e59a997be4b5fcfcb2b765405a2d890, type: 3}
   unmovableTileSprite: {fileID: -4475892385933594388, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
   grassFullTileSprite: {fileID: 6467616030678447296, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
@@ -657,6 +659,7 @@ MonoBehaviour:
   grass3TileSprite: {fileID: -2554972679103285264, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
   grass2TileSprite: {fileID: 8553936927198527006, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
   grass1TileSprite: {fileID: -8866006837411747052, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
+  replantedSprite: {fileID: -4475892385933594388, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
   firstLevelExplanations:
   - {fileID: 2030796132}
   - {fileID: 1707406426}
@@ -667,7 +670,7 @@ MonoBehaviour:
   flagPrefab: {fileID: 2130075903939326781, guid: 4bad27ce6cd9918a3b04fa72f75b5604, type: 3}
   rockPrefab: {fileID: 2130075903939326781, guid: 0eced06bd61ce514faa42382911f6346, type: 3}
   currentLevelText: {fileID: 813533590}
-  currentLevelId: 0
+  currentLevelId: 13
   myCamera: {fileID: 1414344224}
 --- !u!4 &274094169
 Transform:
