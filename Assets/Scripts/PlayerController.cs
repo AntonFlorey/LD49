@@ -31,7 +31,9 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if (this.myLevel.Manager.fadingOutLevel != null)
+        // Adjust height according to ocean movement
+        childRenderer.transform.localPosition = new Vector3(0.0f, myOcean.GetOceanHeight(new Vector2(pos.X, pos.Y)), 0.0f);
+        if (this.myLevel.Manager.fadingOutLevel != null)
 			return;
         if (canMove)
 		{
@@ -41,14 +43,6 @@ public class PlayerController : MonoBehaviour
 		{
             this.PushTiles();
 		}
-        // I dont know what im doing
-        if (!jumpedOff)
-		{
-            // Adjust height according to odean movement
-            float x = transform.localPosition.x;
-            float z = transform.localPosition.z;
-            transform.localPosition = new Vector3(x, myOcean.GetOceanHeight(new Vector2(pos.X, pos.Y)), z);
-        }
     }
 
     private void PushTiles()
@@ -151,7 +145,7 @@ public class PlayerController : MonoBehaviour
             yield return null;
 		}
         // Set the target position (safety)
-        //transform.localPosition = targetPos;
+        transform.localPosition = targetPos;
 
         // Player arrived at the new tile
         pos = newTile;

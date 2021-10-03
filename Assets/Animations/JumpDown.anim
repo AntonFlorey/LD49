@@ -75,7 +75,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: SpriteObject
+    path: movementfix/SpriteObject
   m_ScaleCurves: []
   m_FloatCurves:
   - curve:
@@ -186,7 +186,7 @@ AnimationClip:
     - time: 1.4833333
       value: {fileID: 5938012242645255967, guid: b8945b649a519624382041b98dac0b51, type: 3}
     attribute: m_Sprite
-    path: SpriteObject
+    path: movementfix/SpriteObject
     classID: 212
     script: {fileID: 0}
   m_SampleRate: 60
@@ -197,7 +197,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 590974315
+      path: 693540299
       attribute: 1
       script: {fileID: 0}
       typeID: 4
@@ -225,7 +225,7 @@ AnimationClip:
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 590974315
+      path: 693540299
       attribute: 0
       script: {fileID: 0}
       typeID: 212
@@ -377,7 +377,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: SpriteObject
+    path: movementfix/SpriteObject
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -441,7 +441,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: SpriteObject
+    path: movementfix/SpriteObject
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -469,7 +469,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: SpriteObject
+    path: movementfix/SpriteObject
     classID: 4
     script: {fileID: 0}
   m_EulerEditorCurves: []
