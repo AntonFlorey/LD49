@@ -667,7 +667,7 @@ MonoBehaviour:
   flagPrefab: {fileID: 2130075903939326781, guid: 4bad27ce6cd9918a3b04fa72f75b5604, type: 3}
   rockPrefab: {fileID: 2130075903939326781, guid: 0eced06bd61ce514faa42382911f6346, type: 3}
   currentLevelText: {fileID: 813533590}
-  currentLevelId: 1
+  currentLevelId: 0
   myCamera: {fileID: 1414344224}
 --- !u!4 &274094169
 Transform:
