@@ -94,6 +94,11 @@ public class TileManager : MonoBehaviour
         {
             return CoordsToTransformPosition(this.X, this.Y);
         }
+
+        public bool IsUpDir()
+		{
+            return this.X == -1 || this.Y == 1;
+		}
     }
 
 

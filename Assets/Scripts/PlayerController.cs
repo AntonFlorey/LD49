@@ -9,7 +9,8 @@ public class PlayerController : MonoBehaviour
     public TileManager.TilePos pos;
     public bool canMove = true;
     public bool canPush = true;
-    public bool jumpedOff = false; 
+    public bool jumpedOff = false;
+    public bool pushedOff = false;
 
     [SerializeField] private float jumpTime = 0.5f;
     [SerializeField] private Sprite[] mySprites;
@@ -44,16 +45,29 @@ public class PlayerController : MonoBehaviour
 			return;
 
         if (myLevel.CanShiftTiles(pos, dir))
-            PushTiles(dir);
+            StartCoroutine(PushTiles(dir));
     }
 
-    private void PushTiles(TileManager.TilePos pushDir)
+    IEnumerator PushTiles(TileManager.TilePos pushDir)
 	{
+        myRenderer.flipX = pushDir.X == -1 || pushDir.Y == -1;
         canPush = false;
-        // Play animation
+        // Play Animation
+		if (pushDir.IsUpDir())
+		{
+            myAnimator.Play("PushUp", -1, 0.0f);
+		}
+		else
+		{
+            myAnimator.Play("PushDown", -1, 0.0f);
+        }
         // Play sound
+        pushedOff = false;
+		while (!pushedOff)
+		{
+            yield return null;
+		}
         myLevel.ShiftTiles(pos, pushDir);
-        canPush = true; // remove this later on
 	}
 
     private TileManager.TilePos GetInputDir(KeyCode[] keys)
