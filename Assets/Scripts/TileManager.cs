@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -25,6 +26,7 @@ public class TileManager : MonoBehaviour
 
     public GameObject[] firstLevelExplanations;
 
+    public GameObject levelPrefab;
     public GameObject playerPrefab;
     public GameObject flagPrefab;
     public GameObject rockPrefab;
@@ -33,7 +35,12 @@ public class TileManager : MonoBehaviour
 
     public int currentLevelId = 0;
     public Level currentLevel = null;
+    private Vector3 currentLevelOffset = Vector3.zero;
     public Camera myCamera;
+
+    private float levelFadeDelay = 5f;
+    private float fadingOutTime = 0f;
+    public Level fadingOutLevel = null;
     
     public class TileType
     {
@@ -115,36 +122,38 @@ public class TileManager : MonoBehaviour
         public TileManager Manager;
         private PlayerController playerComp;
 
+        public GameObject obj;
         public bool StepActive = false;
         public float CurrentStepDelta = 0.0f;
         public float StepLength = 2.0f;  // in seconds
 
-        public Level(Dictionary<TilePos, Tile> tiles, TilePos playerPos, TileManager manager)
+        public Level(Dictionary<TilePos, Tile> tiles, TilePos playerPos, Vector3 levelPos, TileManager manager)
         {
             this.Tiles = tiles;
             this.Manager = manager;
-            
+
+            this.obj = Instantiate(manager.levelPrefab, levelPos, Quaternion.identity);
             // make tiles
             foreach (var entry in tiles)
             {
                 var pos = entry.Key;
-                var obj = Instantiate(manager.tilePrefab, pos.ToTransformPosition(), Quaternion.identity);
-                var comp = obj.GetComponent<TileComponent>();
+                var tileObj = Instantiate(manager.tilePrefab, pos.ToTransformPosition(), Quaternion.identity, this.obj.transform);
+                var comp = tileObj.GetComponent<TileComponent>();
                 comp.Init(this, manager.tileSprites[entry.Value.Type], pos);
                 entry.Value.Comp = comp;
                 if (entry.Value.HasFlag)
                 {
-                    var flagObj = Instantiate(manager.flagPrefab, Vector3.zero, Quaternion.identity, obj.transform);
+                    var flagObj = Instantiate(manager.flagPrefab, Vector3.zero, Quaternion.identity, tileObj.transform);
                     flagObj.transform.localPosition = new Vector3(0f, 0f, -2f);
                 }
                 if (entry.Value.HasRock)
 				{
-                    var rockObj = Instantiate(manager.rockPrefab, Vector3.zero, Quaternion.identity, obj.transform);
+                    var rockObj = Instantiate(manager.rockPrefab, Vector3.zero, Quaternion.identity, tileObj.transform);
                     rockObj.transform.localPosition = new Vector3(0f, 0f, -2f);
                 }
             }
             // make player
-            var player = Instantiate(manager.playerPrefab, playerPos.ToTransformPosition(), Quaternion.identity);
+            var player = Instantiate(manager.playerPrefab, this.obj.transform.position + playerPos.ToTransformPosition(), Quaternion.identity, this.obj.transform);
             this.playerComp = player.GetComponent<PlayerController>();
             this.playerComp.myLevel = this;
             this.playerComp.pos = playerPos;
@@ -229,9 +238,19 @@ public class TileManager : MonoBehaviour
 
         public void Cleanup()
         {
-            foreach (var tile in this.Tiles.Values)
-                Destroy(tile.Comp.gameObject);
-            Destroy(playerComp.gameObject);
+            Destroy(this.obj);
+        }
+
+        public Vector3 GetGlobalCenterPos()
+        {
+            TilePos smallPos = new TilePos(Int32.MaxValue, Int32.MaxValue);
+            TilePos largePos = new TilePos(Int32.MinValue, Int32.MinValue);
+            foreach (var pos in this.Tiles.Keys)
+            {
+                smallPos = new TilePos(Math.Min(pos.X, smallPos.X), Math.Min(pos.Y, smallPos.Y));
+                largePos = new TilePos(Math.Max(pos.X, largePos.X), Math.Max(pos.Y, largePos.Y));
+            }
+            return this.obj.transform.position + 0.5f * (smallPos + largePos + new TilePos(-2, 2)).ToTransformPosition();
         }
     }
     
@@ -279,7 +298,7 @@ public class TileManager : MonoBehaviour
             }
         }
 
-        return new Level(tiles, playerPos, this);
+        return new Level(tiles, playerPos, this.currentLevelOffset, this);
     }
 
     public void RestartCurrentLevel()
@@ -294,17 +313,24 @@ public class TileManager : MonoBehaviour
         if (currentLevelId < firstLevelExplanations.Length)
             firstLevelExplanations[currentLevelId].SetActive(true);
 
-        TilePos smallPos = new TilePos(Int32.MaxValue, Int32.MaxValue);
-        TilePos largePos = new TilePos(Int32.MinValue, Int32.MinValue);
-        foreach (var pos in this.currentLevel.Tiles.Keys)
-        {
-            smallPos = new TilePos(Math.Min(pos.X, smallPos.X), Math.Min(pos.Y, smallPos.Y));
-            largePos = new TilePos(Math.Max(pos.X, largePos.X), Math.Max(pos.Y, largePos.Y));
-        }
-
-        var center = 0.5f * (smallPos + largePos + new TilePos(-2, 2)).ToTransformPosition();
+        var center = this.currentLevel.GetGlobalCenterPos();
         this.myCamera.transform.localPosition =
             new Vector3(center.x, center.y, this.myCamera.transform.localPosition.z);
+    }
+
+    public void ProgressToNextLevel()
+    {
+        this.fadingOutLevel = this.currentLevel;
+        this.currentLevel = null;
+        this.fadingOutTime = 0f;
+        this.currentLevelId++;
+        
+        var verticalSize = myCamera.orthographicSize * 2.0f;
+        var horizontalSize = verticalSize * Screen.width / Screen.height;
+        var levelOffset = new Vector3(horizontalSize, -verticalSize, 0);
+        this.currentLevelOffset += levelOffset;
+
+        this.RestartCurrentLevel();
     }
 
     private void Start()
@@ -324,6 +350,22 @@ public class TileManager : MonoBehaviour
         if (Input.GetKeyDown("r"))
         {
             this.RestartCurrentLevel();
+        }
+
+        if (this.fadingOutLevel != null)
+        {
+            this.fadingOutTime += Time.deltaTime;
+            var newCenter = Vector3.Lerp(this.fadingOutLevel.GetGlobalCenterPos(),
+                this.currentLevel.GetGlobalCenterPos(), this.fadingOutTime / this.levelFadeDelay);
+            this.myCamera.transform.position = new Vector3(newCenter.x, newCenter.y, this.myCamera.transform.position.z);
+            if (this.fadingOutTime >= this.levelFadeDelay)
+            {
+                // done.
+                this.fadingOutLevel.Cleanup();
+                this.fadingOutLevel = null;
+                this.fadingOutTime = 0;
+            }
+            return;
         }
         if (this.currentLevel != null)
             this.currentLevel.Update();
