@@ -44,6 +44,10 @@ public class TileManager : MonoBehaviour
     private float fadingOutTime = 0f;
     public Level fadingOutLevel = null;
 
+    public bool replantsEverything = false;
+    public float replantingTime = 0f;
+    public float pushTogetherDelay = 4f;
+
     public List<Level> pastLevels = new List<Level>();
     
     public class TileType
@@ -87,6 +91,8 @@ public class TileManager : MonoBehaviour
     {
         public readonly int X;
         public readonly int Y;
+        
+        public static float offsetScale = 1.4f;
 
         public TilePos(int x, int y)
         {
@@ -103,13 +109,11 @@ public class TileManager : MonoBehaviour
 
         public static Vector3 CoordsToTransformPosition(float x, float y)
         {
-            float offsetScale = 1.4f;
             return new Vector3(0.5f * offsetScale * x + 0.5f * offsetScale * y, -0.25f * offsetScale * x + 0.25f * offsetScale * y, y - x);   
         }
 
         public static Vector2 TransformToTileCoords(float x, float y)
 		{
-            float offsetScale = 1.4f;
             return 1.0f / offsetScale * (new Vector2(x - 2.0f * y, x + 2.0f * y));
 		}
 
@@ -302,6 +306,8 @@ public class TileManager : MonoBehaviour
                         var next = old + dir;
                         if (replanted.Contains(next))
                             continue;
+                        if (Get(next) == null)
+                            continue;
                         this.MaybeReplantTile(next);
                         this.UpdateStep();
                         yield return new WaitForSeconds(0.2f);
@@ -356,8 +362,15 @@ public class TileManager : MonoBehaviour
                 }
             }
         }
+        
+        // danke anton ..., shift everything by player pos
+        var shiftedTiles = new Dictionary<TilePos, Tile>();
+        foreach (var entry in tiles)
+        {
+            shiftedTiles.Add(new TilePos(entry.Key.X - playerPos.X, entry.Key.Y - playerPos.Y), entry.Value);
+        }
 
-        return new Level(tiles, playerPos, this.currentLevelOffset, this);
+        return new Level(shiftedTiles, new TilePos(0, 0), this.currentLevelOffset, this);
     }
 
     public void RestartCurrentLevel()
@@ -407,6 +420,12 @@ public class TileManager : MonoBehaviour
 
     private void Update()
     {
+        if (replantsEverything)
+        {
+            if (replantingTime < pushTogetherDelay)
+                replantingTime += Time.deltaTime;
+            TilePos.offsetScale = Mathf.Max(1f, Mathf.Lerp(1.4f, 1f, replantingTime / pushTogetherDelay));
+        }
         if (this.fadingOutLevel != null)
         {
             this.fadingOutTime += Time.deltaTime;
@@ -426,6 +445,8 @@ public class TileManager : MonoBehaviour
                 {
                     // last level, whoo
                     // in the last level, all tiles turn healthy again
+                    replantsEverything = true;
+                    replantingTime = 0;
                     StartCoroutine(this.currentLevel.ReplantFromCenter());
                 }
             }
