@@ -28,7 +28,7 @@ public class TileManager : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject flagPrefab;
     public GameObject rockPrefab;
-    
+
     public Text currentLevelText;
 
     public int currentLevelId = 0;
@@ -95,6 +95,12 @@ public class TileManager : MonoBehaviour
             float offsetScale = 1.4f;
             return new Vector3(0.5f * offsetScale * x + 0.5f * offsetScale * y, -0.25f * offsetScale * x + 0.25f * offsetScale * y, y - x);   
         }
+
+        public static Vector2 TransformToTileCoords(float x, float y)
+		{
+            float offsetScale = 1.4f;
+            return 1.0f / offsetScale * (new Vector2(x - 2.0f * y, x + 2.0f * y));
+		}
 
         public Vector3 ToTransformPosition()
         {
