@@ -17,11 +17,14 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer myRenderer;
     private Animator myAnimator;
     public TileManager.Level myLevel;
+    public Transform childRendererTransform;
+    private Ocean myOcean;
 
 	private void Start()
 	{
         myRenderer = this.GetComponentInChildren<SpriteRenderer>();
         myAnimator = this.GetComponent<Animator>();
+        myOcean = GameObject.Find("Ocean").GetComponent<Ocean>();
         AdjustDepth();
 	}
 
@@ -38,6 +41,14 @@ public class PlayerController : MonoBehaviour
 		{
             this.PushTiles();
 		}
+        // I dont know what im doing
+        if (canMove)
+		{
+            // Adjust height according to odean movement
+            float x = transform.localPosition.x;
+            float z = transform.localPosition.z;
+            transform.localPosition = new Vector3(x, myOcean.GetOceanHeight(new Vector2(pos.X, pos.Y)), z);
+        }
     }
 
     private void PushTiles()
