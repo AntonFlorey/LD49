@@ -301,7 +301,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Reach the flag
+  m_Text: 'Reach the flower
 
     to complete the level'
 --- !u!222 &774909489
