@@ -13,6 +13,7 @@ public class TileManager : MonoBehaviour
     public static TileType Grass3 = new TileType('3', true, true, Grass2);
     public static TileType Grass4 = new TileType('4', true, true, Grass3);
     public static TileType GrassFull = new TileType('o', true, true, Grass4);
+    public static TileType Replanted = new TileType('v', true, false, null);
 
     public TextAsset[] levelTextAssets;
     public GameObject tilePrefab;
@@ -22,6 +23,7 @@ public class TileManager : MonoBehaviour
     public Sprite grass3TileSprite;
     public Sprite grass2TileSprite;
     public Sprite grass1TileSprite;
+    public Sprite replantedSprite;
     public Dictionary<TileType, Sprite> tileSprites = new Dictionary<TileType, Sprite>();
 
     public GameObject[] firstLevelExplanations;
@@ -41,6 +43,12 @@ public class TileManager : MonoBehaviour
     private float levelFadeDelay = 5f;
     private float fadingOutTime = 0f;
     public Level fadingOutLevel = null;
+
+    public bool replantsEverything = false;
+    public float replantingTime = 0f;
+    public float pushTogetherDelay = 4f;
+
+    public List<Level> pastLevels = new List<Level>();
     
     public class TileType
     {
@@ -83,6 +91,8 @@ public class TileManager : MonoBehaviour
     {
         public readonly int X;
         public readonly int Y;
+        
+        public static float offsetScale = 1.4f;
 
         public TilePos(int x, int y)
         {
@@ -99,13 +109,11 @@ public class TileManager : MonoBehaviour
 
         public static Vector3 CoordsToTransformPosition(float x, float y)
         {
-            float offsetScale = 1.4f;
             return new Vector3(0.5f * offsetScale * x + 0.5f * offsetScale * y, -0.25f * offsetScale * x + 0.25f * offsetScale * y, y - x);   
         }
 
         public static Vector2 TransformToTileCoords(float x, float y)
 		{
-            float offsetScale = 1.4f;
             return 1.0f / offsetScale * (new Vector2(x - 2.0f * y, x + 2.0f * y));
 		}
 
@@ -126,7 +134,7 @@ public class TileManager : MonoBehaviour
         public readonly Dictionary<TilePos, Tile> Tiles;
         public readonly HashSet<Tile> DeletedTiles = new HashSet<Tile>();
         public TileManager Manager;
-        private PlayerController playerComp;
+        public PlayerController playerComp;
 
         public GameObject obj;
         public bool StepActive = false;
@@ -247,6 +255,18 @@ public class TileManager : MonoBehaviour
             Destroy(this.obj);
         }
 
+        public TilePos GetDimensions()
+        {
+            TilePos smallPos = new TilePos(Int32.MaxValue, Int32.MaxValue);
+            TilePos largePos = new TilePos(Int32.MinValue, Int32.MinValue);
+            foreach (var pos in this.Tiles.Keys)
+            {
+                smallPos = new TilePos(Math.Min(pos.X, smallPos.X), Math.Min(pos.Y, smallPos.Y));
+                largePos = new TilePos(Math.Max(pos.X, largePos.X), Math.Max(pos.Y, largePos.Y));
+            }
+            return new TilePos(largePos.X - smallPos.X + 1, largePos.Y - smallPos.Y + 1);
+        }
+
         public Vector3 GetGlobalCenterPos()
         {
             TilePos smallPos = new TilePos(Int32.MaxValue, Int32.MaxValue);
@@ -257,6 +277,45 @@ public class TileManager : MonoBehaviour
                 largePos = new TilePos(Math.Max(pos.X, largePos.X), Math.Max(pos.Y, largePos.Y));
             }
             return this.obj.transform.position + 0.5f * (smallPos + largePos + new TilePos(-2, 2)).ToTransformPosition();
+        }
+
+        public void MaybeReplantTile(TilePos pos)
+        {
+            if (Get(pos) == null)
+                return;
+            Get(pos).Comp.DoChangeTo(Replanted);
+        }
+    
+        public IEnumerator ReplantFromCenter()
+        {
+            var startPos = this.playerComp.pos;
+            var dims = this.GetDimensions();
+            var radius = Math.Max(dims.X, dims.Y);
+            var dirs = new[]
+                { new TilePos(0, 1), new TilePos(0, -1), new TilePos(-1, 0), new TilePos(1, 0) };
+
+            HashSet<TilePos> replanted = new HashSet<TilePos>();
+            replanted.Add(startPos);
+            for (int rad = 1; rad < radius; rad++)
+            {
+                HashSet<TilePos> nexts = new HashSet<TilePos>();
+                foreach (var old in replanted)
+                {
+                    foreach (var dir in dirs)
+                    {
+                        var next = old + dir;
+                        if (replanted.Contains(next))
+                            continue;
+                        if (Get(next) == null)
+                            continue;
+                        this.MaybeReplantTile(next);
+                        this.UpdateStep();
+                        yield return new WaitForSeconds(0.2f);
+                        nexts.Add(next);
+                    }
+                }
+                replanted.UnionWith(nexts);
+            }
         }
     }
     
@@ -282,7 +341,7 @@ public class TileManager : MonoBehaviour
                     }
                     else if (code == 'F')
                     {
-                        tile = new Tile(GrassFull);
+                        tile = new Tile(Unmovable);
                         tile.HasFlag = true;
                     }
                     else if (code == 'X')
@@ -303,8 +362,15 @@ public class TileManager : MonoBehaviour
                 }
             }
         }
+        
+        // danke anton ..., shift everything by player pos
+        var shiftedTiles = new Dictionary<TilePos, Tile>();
+        foreach (var entry in tiles)
+        {
+            shiftedTiles.Add(new TilePos(entry.Key.X - playerPos.X, entry.Key.Y - playerPos.Y), entry.Value);
+        }
 
-        return new Level(tiles, playerPos, this.currentLevelOffset, this);
+        return new Level(shiftedTiles, new TilePos(0, 0), this.currentLevelOffset, this);
     }
 
     public void RestartCurrentLevel()
@@ -345,6 +411,7 @@ public class TileManager : MonoBehaviour
         this.tileSprites[Grass3] = grass3TileSprite;
         this.tileSprites[Grass2] = grass2TileSprite;
         this.tileSprites[Grass1] = grass1TileSprite;
+        this.tileSprites[Replanted] = replantedSprite;
         
         RestartCurrentLevel();
         if (currentLevelId < firstLevelExplanations.Length)
@@ -353,6 +420,12 @@ public class TileManager : MonoBehaviour
 
     private void Update()
     {
+        if (replantsEverything)
+        {
+            if (replantingTime < pushTogetherDelay)
+                replantingTime += Time.deltaTime;
+            TilePos.offsetScale = Mathf.Max(1f, Mathf.Lerp(1.4f, 1f, replantingTime / pushTogetherDelay));
+        }
         if (this.fadingOutLevel != null)
         {
             this.fadingOutTime += Time.deltaTime;
@@ -362,11 +435,20 @@ public class TileManager : MonoBehaviour
             if (this.fadingOutTime >= this.levelFadeDelay)
             {
                 // done.
-                this.fadingOutLevel.Cleanup();
+                this.pastLevels.Add(this.fadingOutLevel);
                 this.fadingOutLevel = null;
                 this.fadingOutTime = 0;
                 if (currentLevelId < firstLevelExplanations.Length)
                     firstLevelExplanations[currentLevelId].SetActive(true);
+
+                if (currentLevelId == levelTextAssets.Length - 1)
+                {
+                    // last level, whoo
+                    // in the last level, all tiles turn healthy again
+                    replantsEverything = true;
+                    replantingTime = 0;
+                    StartCoroutine(this.currentLevel.ReplantFromCenter());
+                }
             }
             return;
         }
