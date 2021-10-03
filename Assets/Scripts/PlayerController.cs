@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer myRenderer;
     private Animator myAnimator;
     public TileManager.Level myLevel;
-    public Transform childRendererTransform;
+    public GameObject childRenderer;
     private Ocean myOcean;
 
 	private void Start()
@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
             this.PushTiles();
 		}
         // I dont know what im doing
-        if (canMove)
+        if (!jumpedOff)
 		{
             // Adjust height according to odean movement
             float x = transform.localPosition.x;
@@ -151,7 +151,7 @@ public class PlayerController : MonoBehaviour
             yield return null;
 		}
         // Set the target position (safety)
-        transform.localPosition = targetPos;
+        //transform.localPosition = targetPos;
 
         // Player arrived at the new tile
         pos = newTile;
@@ -161,7 +161,7 @@ public class PlayerController : MonoBehaviour
             yield return null;
 		}
         myAnimator.speed = 1.0f;
-
+        jumpedOff = false;
             
         // check win condition
         if (this.myLevel.Get(pos).HasFlag)

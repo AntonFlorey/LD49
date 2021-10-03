@@ -133,7 +133,7 @@ MonoBehaviour:
   pushedOff: 0
   jumpTime: 0.15
   mySprites: []
-  childRendererTransform: {fileID: 6018265274001808666}
+  childRenderer: {fileID: 1294501436336313629}
 --- !u!95 &-5848014061816965765
 Animator:
   serializedVersion: 3
