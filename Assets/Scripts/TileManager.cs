@@ -316,8 +316,6 @@ public class TileManager : MonoBehaviour
 
         foreach (var obj in firstLevelExplanations)
             obj.SetActive(false);
-        if (currentLevelId < firstLevelExplanations.Length)
-            firstLevelExplanations[currentLevelId].SetActive(true);
 
         var center = this.currentLevel.GetGlobalCenterPos();
         this.myCamera.transform.localPosition =
@@ -349,15 +347,12 @@ public class TileManager : MonoBehaviour
         this.tileSprites[Grass1] = grass1TileSprite;
         
         RestartCurrentLevel();
+        if (currentLevelId < firstLevelExplanations.Length)
+            firstLevelExplanations[currentLevelId].SetActive(true);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown("r"))
-        {
-            this.RestartCurrentLevel();
-        }
-
         if (this.fadingOutLevel != null)
         {
             this.fadingOutTime += Time.deltaTime;
@@ -370,8 +365,16 @@ public class TileManager : MonoBehaviour
                 this.fadingOutLevel.Cleanup();
                 this.fadingOutLevel = null;
                 this.fadingOutTime = 0;
+                if (currentLevelId < firstLevelExplanations.Length)
+                    firstLevelExplanations[currentLevelId].SetActive(true);
             }
             return;
+        }
+        if (Input.GetKeyDown("r"))
+        {
+            this.RestartCurrentLevel();
+            if (currentLevelId < firstLevelExplanations.Length)
+                firstLevelExplanations[currentLevelId].SetActive(true);
         }
         if (this.currentLevel != null)
             this.currentLevel.Update();
