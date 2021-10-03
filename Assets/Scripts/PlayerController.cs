@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
         childRenderer.transform.localPosition = new Vector3(0.0f, myOcean.GetOceanHeight(new Vector2(pos.X, pos.Y)), 0.0f);
         if (this.myLevel.Manager.fadingOutLevel != null)
 			return;
-        if (canMove)
+        if (canMove && !jumpedOff)
 		{
             this.Move();
 		}
@@ -118,13 +118,13 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator MoveToTile(TileManager.TilePos newTile)
 	{
+        canMove = false;
+        canPush = false;
+        jumpedOff = false;
         Vector3 startPos = this.transform.localPosition;
         Vector3 targetPos = newTile.ToTransformPosition();
         targetPos.z -= 2;
         float currentStepDelta = 0.0f;
-        canMove = false;
-        canPush = false;
-        jumpedOff = false;
 
         // Play some animation
         myAnimator.speed = 1.0f / jumpTime;
@@ -156,7 +156,7 @@ public class PlayerController : MonoBehaviour
 		}
         myAnimator.speed = 1.0f;
         jumpedOff = false;
-            
+        myOcean.MakeWave(new Vector2(newTile.X, newTile.Y), 1.0f, 0.2f, 0.5f);
         // check win condition
         if (this.myLevel.Get(pos).HasFlag)
         {

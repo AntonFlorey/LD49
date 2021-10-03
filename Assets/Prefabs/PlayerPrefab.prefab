@@ -132,7 +132,7 @@ MonoBehaviour:
   canPush: 1
   jumpedOff: 0
   pushedOff: 0
-  jumpTime: 1
+  jumpTime: 0.2
   mySprites: []
   childRenderer: {fileID: 5694175270399236132}
 --- !u!95 &-5848014061816965765
