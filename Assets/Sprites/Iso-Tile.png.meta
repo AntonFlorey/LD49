@@ -29,6 +29,9 @@ TextureImporter:
   - first:
       213: -8212451729691591928
     second: Iso-Tile_8
+  - first:
+      213: 6924066120418836129
+    second: Iso-Tile_9
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -314,6 +317,27 @@ TextureImporter:
       bones: []
       spriteID: 80bb0bcc9a2870e80800000000000000
       internalID: -8212451729691591928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Iso-Tile_9
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 0
+        width: 32
+        height: 32
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1aeb1e48379371060800000000000000
+      internalID: 6924066120418836129
       vertices: []
       indices: 
       edges: []
