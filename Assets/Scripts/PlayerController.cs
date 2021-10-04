@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private Ocean myOcean;
     
     public AudioSource[] splashAudios;
+    public AudioSource pushAudio;
 
 	private void Start()
 	{
@@ -74,6 +75,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator PushTiles(TileManager.TilePos pushDir)
 	{
+		this.pushAudio.Play();
         myRenderer.flipX = pushDir.X == -1 || pushDir.Y == -1;
         canPush = false;
         // Play Animation
@@ -186,7 +188,7 @@ public class PlayerController : MonoBehaviour
         // visual water fun
         myOcean.MakeWave(new Vector2(newTile.X, newTile.Y), 1.0f, 0.2f, 0.5f);
         myLevel.Get(newTile).Comp.ShootWaterParticles();
-        var splashNum = (pos.X + pos.Y) % this.splashAudios.Length;
+        var splashNum = (pos.X + pos.Y + 1000000) % this.splashAudios.Length;  // c# mod is shit.
         this.splashAudios[splashNum].Play();
         
         // check win condition
