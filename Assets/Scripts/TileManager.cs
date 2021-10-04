@@ -516,7 +516,7 @@ public class TileManager : MonoBehaviour
                     if (this.pastLevels.Count > 1)
                         this.currentLevelText.text = "Level " + (this.pastLevels.Count - 1);
                     else 
-                        this.currentLevelText.text = "Thanks for playing!";
+                        this.currentLevelText.text = "";
                     StartCoroutine(fadeBackTo.ReplantFromPos(fadeBackTo.GetBottomRight()));
                     this.startedReplant = true;
                 }
