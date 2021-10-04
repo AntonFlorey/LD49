@@ -1,6 +1,6 @@
-  oo  o
-o  ooo oo
-  ooAoo
-o  ooo
- oo o oo
- o  oo
+  11  1
+1  111 11
+  11A11
+1  111
+ 11 1 11
+ 1  11

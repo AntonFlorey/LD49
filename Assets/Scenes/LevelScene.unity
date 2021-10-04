@@ -717,7 +717,7 @@ MonoBehaviour:
   flagPrefab: {fileID: 2130075903939326781, guid: 4bad27ce6cd9918a3b04fa72f75b5604, type: 3}
   rockPrefab: {fileID: 2130075903939326781, guid: 0eced06bd61ce514faa42382911f6346, type: 3}
   currentLevelText: {fileID: 813533590}
-  currentLevelId: 3
+  currentLevelId: 1
   myCamera: {fileID: 1414344224}
   leafPrefab: {fileID: 5110769352456530724, guid: f935dab6e17a0944eb0e4ebac440d9f8, type: 3}
   leafSpeedCurve:
@@ -1979,13 +1979,13 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'This was ...
+  m_Text: 'This was "Unrooted"
 
     A game made in 72h for Ludum Dare 49
 
 
-    By Anton
-    & Frithjof'
+    By
+    Anton & Frithjof'
 --- !u!222 &805016619
 CanvasRenderer:
   m_ObjectHideFlags: 0

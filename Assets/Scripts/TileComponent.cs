@@ -16,7 +16,8 @@ public class TileComponent : MonoBehaviour
     public GameObject topEntity;
     private bool IsBreaking = false;
     public Animator breakingAnimation;
-    
+    public Animator setWaterColorAnimator;
+
     public void Init(TileManager.Level level, Sprite sprite, TileManager.TilePos pos)
     {
         this.Level = level;

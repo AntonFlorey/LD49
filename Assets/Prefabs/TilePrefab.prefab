@@ -5094,6 +5094,7 @@ MonoBehaviour:
   waterparticles2: {fileID: 4815342433143834530}
   topEntity: {fileID: 0}
   breakingAnimation: {fileID: 6275375104024424268}
+  setWaterColorAnimator: {fileID: 8210491994034604449}
 --- !u!1 &7806436224761368512
 GameObject:
   m_ObjectHideFlags: 0

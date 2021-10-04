@@ -520,10 +520,18 @@ public class TileManager : MonoBehaviour
                 myOcean.noiseIntensity = Mathf.Lerp(0.1f, 0f, replantingTime / pushTogetherDelay);
                 myOcean.waveAmplitude = Mathf.Lerp(0.1f, 0f, replantingTime / pushTogetherDelay);
                 this.changeWaterColorTime = 0;
-                foreach (var level in this.pastLevels)
-                    foreach (var tile in level.Tiles.Values)
-                        tile.Comp.breakingAnimation.Play("EndWater");
+
                 return;
+            }
+
+            if (this.changeWaterColorTime == 0)
+            {
+                
+                foreach (var level in this.pastLevels)
+                foreach (var tile in level.Tiles.Values)
+                    tile.Comp.setWaterColorAnimator.Play("EndWater");
+                foreach (var tile in this.currentLevel.Tiles.Values)
+                    tile.Comp.setWaterColorAnimator.Play("EndWater");
             }
             if (this.changeWaterColorTime < this.changeWaterColorDelay)
             {

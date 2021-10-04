@@ -137,7 +137,6 @@ public class PlayerController : MonoBehaviour
 	    var newPos = this.pos + dir;
 	    if (TileClear(newPos))
 		{
-            Debug.Log("jump routine started");
             StartCoroutine(MoveToTile(newPos));
             return;
 		}
