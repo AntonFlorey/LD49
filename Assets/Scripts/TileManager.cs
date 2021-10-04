@@ -51,6 +51,11 @@ public class TileManager : MonoBehaviour
     private float levelFadeDelay = 5f;
     private float fadingOutTime = 0f;
     public Level fadingOutLevel = null;
+    private Vector3 fromLeafPos = Vector3.zero;
+    private GameObject currentLeaf = null;
+    public GameObject leafPrefab;
+    public AnimationCurve leafSpeedCurve;
+    public AnimationCurve leafHeightCurve;
 
     public bool replantsEverything = false;
     public float replantingTime = 0f;
@@ -414,6 +419,7 @@ public class TileManager : MonoBehaviour
         this.levelEnding = true;
         this.levelStartingOrEndingTime = 0f;
 
+        var oldPos = this.currentLevel.playerComp.pos;
         this.fadingOutLevel = this.currentLevel;
         this.currentLevel = null;
         this.fadingOutTime = 0f;
@@ -425,6 +431,10 @@ public class TileManager : MonoBehaviour
         this.currentLevelOffset += levelOffset;
 
         this.RestartCurrentLevel();
+
+        // spawn leaf
+        this.fromLeafPos = this.fadingOutLevel.obj.transform.position + oldPos.ToTransformPosition();
+        this.currentLeaf = Instantiate(this.leafPrefab, fromLeafPos, Quaternion.identity);
     }
 
     private void Start()
@@ -470,19 +480,6 @@ public class TileManager : MonoBehaviour
 
     private void Update()
     {
-        if (levelEnding)
-        {
-            levelStartingOrEndingTime += Time.deltaTime;
-            if (levelStartingOrEndingTime > levelEndAndStartDelay)
-            {
-                levelEnding = false;
-                levelStartingOrEndingTime = 0f;
-
-                this.levelStarting = true;  // lets go new level.
-            }
-            else
-                return;
-        }
         if (replantsEverything)
         {
             if (replantingTime < pushTogetherDelay)
@@ -493,6 +490,7 @@ public class TileManager : MonoBehaviour
                 var myOcean = GameObject.Find("Ocean").GetComponent<Ocean>();
                 myOcean.noiseIntensity = Mathf.Lerp(0.1f, 0f, replantingTime / pushTogetherDelay);
                 myOcean.waveAmplitude = Mathf.Lerp(0.1f, 0f, replantingTime / pushTogetherDelay);
+                return;
             }
 
             if (this.pastLevels.Count > 0)
@@ -526,12 +524,32 @@ public class TileManager : MonoBehaviour
             }
             return;
         }
+
+        if (levelEnding)
+        {
+            levelStartingOrEndingTime += Time.deltaTime;
+            if (levelStartingOrEndingTime > levelEndAndStartDelay)
+            {
+                levelEnding = false;
+                levelStartingOrEndingTime = 0f;
+            }
+            else
+                return;
+        }
         if (this.fadingOutLevel != null)
         {
+            if (this.currentLeaf != null)
+            {
+                var newLeafPos = Vector3.Lerp(
+                    this.fromLeafPos, this.currentLevel.obj.transform.position + this.currentLevel.playerComp.pos.ToTransformPosition(),
+                    leafSpeedCurve.Evaluate(this.fadingOutTime / this.levelFadeDelay));
+                this.currentLeaf.transform.position =
+                    new Vector3(newLeafPos.x, newLeafPos.y + 6f * leafHeightCurve.Evaluate(this.fadingOutTime / this.levelFadeDelay), this.currentLeaf.transform.position.z);
+            }
             this.fadingOutTime += Time.deltaTime;
-            var newCenter = Vector3.Lerp(this.fadingOutLevel.GetGlobalCenterPos(),
+            var newCamCenter = Vector3.Lerp(this.fadingOutLevel.GetGlobalCenterPos(),
                 this.currentLevel.GetGlobalCenterPos(), this.fadingOutTime / this.levelFadeDelay);
-            this.myCamera.transform.position = new Vector3(newCenter.x, newCenter.y, this.myCamera.transform.position.z);
+            this.myCamera.transform.position = new Vector3(newCamCenter.x, newCamCenter.y, this.myCamera.transform.position.z);
             if (this.fadingOutTime >= this.levelFadeDelay)
             {
                 // done.
@@ -543,14 +561,8 @@ public class TileManager : MonoBehaviour
                 if (currentLevelId < firstLevelExplanations.Length)
                     firstLevelExplanations[currentLevelId].SetActive(true);
 
-                if (currentLevelId == levelTextAssets.Length - 1)
-                {
-                    // last level, whoo
-                    // in the last level, all tiles turn healthy again
-                    replantsEverything = true;
-                    replantingTime = 0;
-                    StartCoroutine(this.currentLevel.ReplantFromPos(this.currentLevel.playerComp.pos));
-                }
+                this.levelStartingOrEndingTime = 0f;
+                this.levelStarting = true;
             }
             return;
         }
@@ -561,6 +573,17 @@ public class TileManager : MonoBehaviour
             {
                 levelStarting = false;
                 levelStartingOrEndingTime = 0f;
+                Destroy(this.currentLeaf);
+                this.currentLeaf = null;
+
+                if (currentLevelId == levelTextAssets.Length - 1)
+                {
+                    // last level, whoo
+                    // in the last level, all tiles turn healthy again
+                    replantsEverything = true;
+                    replantingTime = 0;
+                    StartCoroutine(this.currentLevel.ReplantFromPos(this.currentLevel.playerComp.pos));
+                }
             }
             else
                 return;
