@@ -435,7 +435,6 @@ public class TileManager : MonoBehaviour
 
         // spawn leaf
         this.fromLeafPos = this.fadingOutLevel.obj.transform.position + oldPos.ToTransformPosition();
-        this.currentLeaf = Instantiate(this.leafPrefab, fromLeafPos, Quaternion.identity);
     }
 
     private void Start()
@@ -534,6 +533,7 @@ public class TileManager : MonoBehaviour
             if (levelStartingOrEndingTime > levelEndAndStartDelay)
             {
                 levelEnding = false;
+                this.currentLeaf = Instantiate(this.leafPrefab, fromLeafPos, Quaternion.identity);
                 levelStartingOrEndingTime = 0f;
             }
             else
