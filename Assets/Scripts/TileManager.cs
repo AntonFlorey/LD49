@@ -70,6 +70,12 @@ public class TileManager : MonoBehaviour
     public bool levelEnding = false;
     private float levelEndAndStartDelay = 1f;
 
+    private float changeWaterColorTime = 0f;
+    public float changeWaterColorDelay = 2f;
+    
+    public Color initialWaterColor = new Color(57, 75, 80);
+    public Color replantedWaterColor = new Color(115, 190, 211);
+
     public class TileType
     {
         private static readonly Dictionary<char, TileType> byCode = new Dictionary<char, TileType>();
@@ -509,8 +515,20 @@ public class TileManager : MonoBehaviour
                 var myOcean = GameObject.Find("Ocean").GetComponent<Ocean>();
                 myOcean.noiseIntensity = Mathf.Lerp(0.1f, 0f, replantingTime / pushTogetherDelay);
                 myOcean.waveAmplitude = Mathf.Lerp(0.1f, 0f, replantingTime / pushTogetherDelay);
+                this.changeWaterColorTime = 0;
+                foreach (var level in this.pastLevels)
+                    foreach (var tile in level.Tiles.Values)
+                        tile.Comp.SetAnimationToOtherWaterColor();
                 return;
             }
+            if (this.changeWaterColorTime < this.changeWaterColorDelay)
+            {
+                this.changeWaterColorTime += Time.deltaTime;
+                myCamera.backgroundColor = Color.Lerp(this.initialWaterColor, this.replantedWaterColor,
+                    changeWaterColorTime / changeWaterColorDelay);
+                return;
+            }
+            
 
             if (this.pastLevels.Count > 0)
             {
