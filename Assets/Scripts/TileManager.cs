@@ -59,6 +59,11 @@ public class TileManager : MonoBehaviour
 
     private float fadingBackTime = 0f;
     public List<Level> pastLevels = new List<Level>();
+
+    private float levelStartingOrEndingTime = 0f;
+    public bool levelStarting = false;
+    public bool levelEnding = false;
+    private float levelEndAndStartDelay = 1f;
     
     public class TileType
     {
@@ -406,6 +411,9 @@ public class TileManager : MonoBehaviour
 
     public void ProgressToNextLevel()
     {
+        this.levelEnding = true;
+        this.levelStartingOrEndingTime = 0f;
+
         this.fadingOutLevel = this.currentLevel;
         this.currentLevel = null;
         this.fadingOutTime = 0f;
@@ -462,6 +470,19 @@ public class TileManager : MonoBehaviour
 
     private void Update()
     {
+        if (levelEnding)
+        {
+            levelStartingOrEndingTime += Time.deltaTime;
+            if (levelStartingOrEndingTime > levelEndAndStartDelay)
+            {
+                levelEnding = false;
+                levelStartingOrEndingTime = 0f;
+
+                this.levelStarting = true;  // lets go new level.
+            }
+            else
+                return;
+        }
         if (replantsEverything)
         {
             if (replantingTime < pushTogetherDelay)
@@ -532,6 +553,17 @@ public class TileManager : MonoBehaviour
                 }
             }
             return;
+        }
+        if (levelStarting)
+        {
+            levelStartingOrEndingTime += Time.deltaTime;
+            if (levelStartingOrEndingTime > levelEndAndStartDelay)
+            {
+                levelStarting = false;
+                levelStartingOrEndingTime = 0f;
+            }
+            else
+                return;
         }
         if (Input.GetKeyDown("r"))
         {
