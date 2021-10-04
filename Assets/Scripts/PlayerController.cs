@@ -130,7 +130,7 @@ public class PlayerController : MonoBehaviour
         jumpedOff = false;
         Vector3 startPos = this.transform.localPosition;
         Vector3 targetPos = newTile.ToTransformPosition();
-        targetPos.z -= 0.9f;
+        targetPos.z -= 0.95f;
         float currentStepDelta = 0.0f;
 
         // Play some animation
