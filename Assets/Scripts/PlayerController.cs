@@ -12,10 +12,11 @@ public class PlayerController : MonoBehaviour
     public bool jumpedOff = false;
     public bool pushedOff = false;
 
+    public bool unmovable = false;
     [SerializeField] private float jumpTime = 0.5f;
     [SerializeField] private Sprite[] mySprites;
     private SpriteRenderer myRenderer;
-    private Animator myAnimator;
+    public Animator myAnimator;
     public TileManager.Level myLevel;
     public GameObject childRenderer;
     private Ocean myOcean;
@@ -40,7 +41,7 @@ public class PlayerController : MonoBehaviour
 	{
         // Adjust height according to ocean movement
         childRenderer.transform.localPosition = new Vector3(0.0f, myOcean.GetOceanHeight(new Vector2(pos.X, pos.Y)), 0.0f);
-        if (this.myLevel.Manager.fadingOutLevel != null || this.myLevel.Manager.levelStarting || this.myLevel.Manager.levelEnding)
+        if (this.myLevel.Manager.fadingOutLevel != null || this.myLevel.Manager.levelStarting || this.myLevel.Manager.levelEnding || unmovable)
 			return;
         if (canMove && !jumpedOff)
 		{

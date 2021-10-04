@@ -417,6 +417,7 @@ public class TileManager : MonoBehaviour
     public void ProgressToNextLevel()
     {
         this.levelEnding = true;
+        this.currentLevel.playerComp.myAnimator.Play("LooseLeaves");
         this.levelStartingOrEndingTime = 0f;
 
         var oldPos = this.currentLevel.playerComp.pos;
@@ -461,7 +462,7 @@ public class TileManager : MonoBehaviour
             var levelOffset = new Vector3(horizontalSize, -verticalSize, 0);
             this.currentLevelOffset += levelOffset;
             this.currentLevelId++;
-            Destroy(this.currentLevel.playerComp.gameObject);
+            this.currentLevel.playerComp.unmovable = true;
             this.pastLevels.Add(this.currentLevel);
             this.currentLevel = null;
         }
@@ -469,6 +470,8 @@ public class TileManager : MonoBehaviour
         this.CenterCamera();
         if (currentLevelId < firstLevelExplanations.Length)
             firstLevelExplanations[currentLevelId].SetActive(true);
+        
+        this.currentLevel.playerComp.myAnimator.Play("GainLeaves");
     }
 
     private void CenterCamera()
@@ -553,8 +556,7 @@ public class TileManager : MonoBehaviour
             if (this.fadingOutTime >= this.levelFadeDelay)
             {
                 // done.
-                Destroy(this.fadingOutLevel.playerComp.gameObject);
-                this.fadingOutLevel.playerComp = null;
+                this.fadingOutLevel.playerComp.unmovable = true;
                 this.pastLevels.Add(this.fadingOutLevel);
                 this.fadingOutLevel = null;
                 this.fadingOutTime = 0;
@@ -563,6 +565,8 @@ public class TileManager : MonoBehaviour
 
                 this.levelStartingOrEndingTime = 0f;
                 this.levelStarting = true;
+                this.currentLevel.playerComp.myAnimator.Play("GainLeaves");
+                this.currentLeaf.SetActive(false);
             }
             return;
         }
@@ -591,6 +595,7 @@ public class TileManager : MonoBehaviour
         if (Input.GetKeyDown("r"))
         {
             this.RestartCurrentLevel();
+            this.currentLevel.playerComp.myAnimator.Play("GainLeaves");
             this.CenterCamera();
             if (currentLevelId < firstLevelExplanations.Length)
                 firstLevelExplanations[currentLevelId].SetActive(true);
