@@ -430,7 +430,7 @@ public class TileManager : MonoBehaviour
         this.fadingOutTime = 0f;
         this.currentLevelId++;
         
-        var verticalSize = myCamera.orthographicSize * 2.0f;
+        var verticalSize = Math.Max(6, myCamera.orthographicSize * 2.0f);
         var horizontalSize = verticalSize * Screen.width / Screen.height;
         var levelOffset = new Vector3(horizontalSize, -verticalSize, 0);
         this.currentLevelOffset += levelOffset;
