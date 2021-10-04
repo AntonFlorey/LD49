@@ -72,7 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2311659948842064771, guid: b8945b649a519624382041b98dac0b51, type: 3}
+  m_Sprite: {fileID: 2425571995158539275, guid: b8945b649a519624382041b98dac0b51, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -134,6 +134,7 @@ MonoBehaviour:
   pushedOff: 0
   jumpTime: 0.2
   mySprites: []
+  myAnimator: {fileID: 0}
   childRenderer: {fileID: 5694175270399236132}
 --- !u!95 &-5848014061816965765
 Animator:
