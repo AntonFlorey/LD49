@@ -12,6 +12,8 @@ public class TileComponent : MonoBehaviour
     [SerializeField] private AnimationCurve pushedCurve;
     [SerializeField] private ParticleSystem waterparticles1;
     [SerializeField] private ParticleSystem waterparticles2;
+
+    public GameObject topEntity;
     
     public void Init(TileManager.Level level, Sprite sprite, TileManager.TilePos pos)
     {

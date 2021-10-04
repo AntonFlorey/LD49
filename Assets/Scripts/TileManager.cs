@@ -177,9 +177,9 @@ public class TileManager : MonoBehaviour
                 comp.Init(this, manager.tileSprites[entry.Value.Type], pos);
                 entry.Value.Comp = comp;
                 if (entry.Value.HasFlag)
-                    Instantiate(manager.flagPrefab, comp.blockTransform.position + new Vector3(0f, 0f, -0.9f), Quaternion.identity, comp.blockTransform);
+                    comp.topEntity = Instantiate(manager.flagPrefab, comp.blockTransform.position + new Vector3(0f, 0f, -0.9f), Quaternion.identity, comp.blockTransform);
                 if (entry.Value.HasRock)
-                    Instantiate(manager.rockPrefab, comp.blockTransform.position + new Vector3(0f, 0f, -0.9f), Quaternion.identity, comp.blockTransform);
+                    comp.topEntity = Instantiate(manager.rockPrefab, comp.blockTransform.position + new Vector3(0f, 0f, -0.9f), Quaternion.identity, comp.blockTransform);
             }
             // make player
             var player = Instantiate(manager.playerPrefab, this.obj.transform);
@@ -304,6 +304,18 @@ public class TileManager : MonoBehaviour
             if (this.playerComp.pos.X == pos.X && this.playerComp.pos.Y == pos.Y)
             {
                 this.playerComp.myAnimator.Play("GainLeaves");
+            }
+
+            if (Get(pos).HasRock)
+            {
+                Destroy(Get(pos).Comp.topEntity);
+                Get(pos).HasRock = false;
+                var fullTree = Instantiate(this.playerComp, this.obj.transform.position + pos.ToTransformPosition(),
+                    Quaternion.identity, this.obj.transform);
+                var fullTreeComp = fullTree.GetComponent<PlayerController>();
+                fullTreeComp.Init(this, pos);
+                fullTreeComp.unmovable = true;
+                fullTreeComp.myAnimator.Play("GainLeaves");
             }
         }
     
