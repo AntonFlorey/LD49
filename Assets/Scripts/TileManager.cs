@@ -301,6 +301,10 @@ public class TileManager : MonoBehaviour
             var tile = replanted[Random.Range(0, replanted.Length)];
             Get(pos).Comp.DoChangeTo(tile);
             Get(pos).Comp.myOcean.MakeWave(new Vector2(pos.X, pos.Y), 1, 0.1f, 0.5f);
+            if (this.playerComp.pos.X == pos.X && this.playerComp.pos.Y == pos.Y)
+            {
+                this.playerComp.myAnimator.Play("GainLeaves");
+            }
         }
     
         public IEnumerator ReplantFromPos(TilePos startPos)
@@ -426,7 +430,7 @@ public class TileManager : MonoBehaviour
         this.fadingOutTime = 0f;
         this.currentLevelId++;
         
-        var verticalSize = myCamera.orthographicSize * 2.0f;
+        var verticalSize = Math.Max(6, myCamera.orthographicSize * 2.0f);
         var horizontalSize = verticalSize * Screen.width / Screen.height;
         var levelOffset = new Vector3(horizontalSize, -verticalSize, 0);
         this.currentLevelOffset += levelOffset;
@@ -462,6 +466,7 @@ public class TileManager : MonoBehaviour
             this.currentLevelOffset += levelOffset;
             this.currentLevelId++;
             this.currentLevel.playerComp.unmovable = true;
+            this.currentLevel.playerComp.myAnimator.Play("NoLeaves");
             this.pastLevels.Add(this.currentLevel);
             this.currentLevel = null;
         }
@@ -497,6 +502,9 @@ public class TileManager : MonoBehaviour
 
             if (this.pastLevels.Count > 0)
             {
+                foreach (var level in this.pastLevels)
+                    level.playerComp.ResetPosition();
+
                 var fadeBackTo = this.pastLevels[this.pastLevels.Count - 1];
                 var newCenter = Vector3.Lerp(this.currentLevel.GetGlobalCenterPos(),
                     fadeBackTo.GetGlobalCenterPos(), this.fadingBackTime / this.levelFadeDelay);

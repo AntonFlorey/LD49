@@ -199,4 +199,10 @@ public class PlayerController : MonoBehaviour
 	{
         return myLevel.Get(checkPos) != null && !myLevel.Get(checkPos).HasRock;
 	}
+
+    public void ResetPosition()
+    {
+	    var newPos = this.pos.ToTransformPosition();
+	    transform.localPosition = new Vector3(newPos.x, newPos.y, transform.localPosition.z);
+    }
 }
