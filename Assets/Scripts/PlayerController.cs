@@ -163,7 +163,9 @@ public class PlayerController : MonoBehaviour
 		}
         myAnimator.speed = 1.0f;
         jumpedOff = false;
+        // visual water fun
         myOcean.MakeWave(new Vector2(newTile.X, newTile.Y), 1.0f, 0.2f, 0.5f);
+        myLevel.Get(newTile).Comp.ShootWaterParticles();
         // check win condition
         if (this.myLevel.Get(pos).HasFlag)
         {

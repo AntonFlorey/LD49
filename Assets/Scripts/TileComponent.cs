@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TileComponent : MonoBehaviour
@@ -8,6 +10,8 @@ public class TileComponent : MonoBehaviour
     [SerializeField] public Transform blockTransform;
     public Ocean myOcean;
     [SerializeField] private AnimationCurve pushedCurve;
+    [SerializeField] private ParticleSystem waterparticles1;
+    [SerializeField] private ParticleSystem waterparticles2;
     
     public void Init(TileManager.Level level, Sprite sprite, TileManager.TilePos pos)
     {
@@ -46,5 +50,29 @@ public class TileComponent : MonoBehaviour
     public void UpdateStep()
     {
         this.prevPos = this.TilePos;
+    }
+
+
+    public void ShootWaterParticles()
+	{
+        ParticleSystem.Particle[] particleArr = new ParticleSystem.Particle[10];
+        waterparticles1.Emit(Random.Range(2, 8));
+        int particles = waterparticles1.GetParticles(particleArr);
+        for (int i = 0; i < particles; i++)
+		{
+            Vector3 vel = particleArr[i].velocity;
+            vel.z = 0.0f;
+            particleArr[i].velocity = vel;
+		}
+        waterparticles1.SetParticles(particleArr, particles);
+        waterparticles2.Emit(Random.Range(2, 8));
+        particles = waterparticles2.GetParticles(particleArr);
+        for (int i = 0; i < particles; i++)
+        {
+            Vector3 vel = particleArr[i].velocity;
+            vel.z = 0.0f;
+            particleArr[i].velocity = vel;
+        }
+        waterparticles2.SetParticles(particleArr, particles);
     }
 }
