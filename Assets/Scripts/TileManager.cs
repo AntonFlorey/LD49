@@ -447,11 +447,8 @@ public class TileManager : MonoBehaviour
         this.currentLevel = null;
         this.fadingOutTime = 0f;
         this.currentLevelId++;
-        
-        var verticalSize = Math.Max(6, myCamera.orthographicSize * 2.0f);
-        var horizontalSize = verticalSize * Screen.width / Screen.height;
-        var levelOffset = new Vector3(horizontalSize, -verticalSize, 0);
-        this.currentLevelOffset += levelOffset;
+
+        this.IncreaseLevelOffset();
 
         this.RestartCurrentLevel();
 
@@ -472,16 +469,15 @@ public class TileManager : MonoBehaviour
         this.tileSprites[Replanted2] = replanted2Sprite;
         this.tileSprites[Replanted3] = replanted3Sprite;
 
-        // this is just to restore the old state. just start at the beginning of the game, and all is fine anyway!!!
+        this.myCamera.backgroundColor = initialWaterColor;
+
+        // this is just to restore the old state.
         var numLevels = this.currentLevelId;
         this.currentLevelId = 0;
         for (int pastLevel = 0; pastLevel < numLevels; pastLevel++)
         {
             this.RestartCurrentLevel();
-            var verticalSize = myCamera.orthographicSize * 2.0f;
-            var horizontalSize = verticalSize * Screen.width / Screen.height;
-            var levelOffset = new Vector3(horizontalSize, -verticalSize, 0);
-            this.currentLevelOffset += levelOffset;
+            this.IncreaseLevelOffset();
             this.currentLevelId++;
             this.currentLevel.playerComp.unmovable = true;
             this.currentLevel.playerComp.myAnimator.Play("NoLeaves");
@@ -501,6 +497,14 @@ public class TileManager : MonoBehaviour
         var center = this.currentLevel.GetGlobalCenterPos();
         this.myCamera.transform.localPosition =
             new Vector3(center.x, center.y, this.myCamera.transform.localPosition.z);
+    }
+
+    private void IncreaseLevelOffset()
+    {
+        var verticalSize = Math.Max(6, myCamera.orthographicSize * 2.0f);
+        var horizontalSize = verticalSize * Screen.width / Screen.height;
+        var levelOffset = new Vector3(horizontalSize, -verticalSize, 0);
+        this.currentLevelOffset += levelOffset;
     }
 
     private void Update()
