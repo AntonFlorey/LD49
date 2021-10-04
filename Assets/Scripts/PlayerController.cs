@@ -27,8 +27,15 @@ public class PlayerController : MonoBehaviour
         myOcean = GameObject.Find("Ocean").GetComponent<Ocean>();
         AdjustDepth();
 	}
+	
+	public void Init(TileManager.Level level, TileManager.TilePos playerPos)
+	{
+		this.myLevel = level;
+		this.pos = playerPos;
+		this.Start();
+		this.Update();
+	}
 
-	// Update is called once per frame
 	void Update()
 	{
         // Adjust height according to ocean movement
