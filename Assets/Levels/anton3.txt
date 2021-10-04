@@ -2,9 +2,9 @@ Axx   xxx
 xooooooox
 xoxxxxxox
  oxoo xO 
-xox2 oxO  F
- o222oxO
- ox2xxxox
+xox3 oxO  F
+ o333oxO
+ ox3xxxox
 xooooooox
 xx  x xxx 
  
