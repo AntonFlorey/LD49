@@ -688,12 +688,11 @@ MonoBehaviour:
   - {fileID: 4900000, guid: b050f43d38766836b879fd71eccc93c4, type: 3}
   - {fileID: 4900000, guid: 3ec6c34c67883759695ae280eefe6112, type: 3}
   - {fileID: 4900000, guid: 96fca36525efe2634ac73d1e5841848d, type: 3}
-  - {fileID: 4900000, guid: a5ebf812f4cb35fe6a0530b6cf737990, type: 3}
-  - {fileID: 4900000, guid: 1780a9a18849bd5aab0b8827dce7b8de, type: 3}
-  - {fileID: 4900000, guid: 7ec0b91eb7fc30fee8fcc74019045075, type: 3}
   - {fileID: 4900000, guid: 7f226e46f69c4c64bbc322bef63894a9, type: 3}
+  - {fileID: 4900000, guid: a5ebf812f4cb35fe6a0530b6cf737990, type: 3}
   - {fileID: 4900000, guid: 8d91bac4cee5afc4f98d22d396d65936, type: 3}
   - {fileID: 4900000, guid: c373997562b34f5428340a0197afcc70, type: 3}
+  - {fileID: 4900000, guid: 1780a9a18849bd5aab0b8827dce7b8de, type: 3}
   tilePrefab: {fileID: 2130075903939326781, guid: 1e59a997be4b5fcfcb2b765405a2d890, type: 3}
   unmovableTileSprite: {fileID: -4475892385933594388, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
   grassFullTileSprite: {fileID: 6467616030678447296, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
