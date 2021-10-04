@@ -73,7 +73,7 @@ public class TileManager : MonoBehaviour
     private float changeWaterColorTime = 0f;
     public float changeWaterColorDelay = 2f;
     
-    private Color initialWaterColor = new Color(57 / 255f, 75 / 255f, 80 / 255f);
+    private Color initialWaterColor = new Color(57 / 255f, 74 / 255f, 80 / 255f);
     private Color replantedWaterColor = new Color(115 / 255f, 190 / 255f, 211 / 255f);
 
     public class TileType
@@ -501,7 +501,7 @@ public class TileManager : MonoBehaviour
 
     private void IncreaseLevelOffset()
     {
-        var verticalSize = Math.Max(6, myCamera.orthographicSize * 2.0f);
+        var verticalSize = Math.Max(3.3f * 2.0f, myCamera.orthographicSize * 2.0f);
         var horizontalSize = verticalSize * Screen.width / Screen.height;
         var levelOffset = new Vector3(horizontalSize, -verticalSize, 0);
         this.currentLevelOffset += levelOffset;

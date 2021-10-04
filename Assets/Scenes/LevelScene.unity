@@ -815,6 +815,7 @@ MonoBehaviour:
   startedReplant: 0
   levelStarting: 0
   levelEnding: 0
+  changeWaterColorDelay: 2
 --- !u!4 &274094169
 Transform:
   m_ObjectHideFlags: 0
