@@ -8,9 +8,6 @@ public class TileComponent : MonoBehaviour
     [SerializeField] public Transform blockTransform;
     public Ocean myOcean;
     [SerializeField] private AnimationCurve pushedCurve;
-
-    private bool changingType = false;
-    private TileManager.TileType changingToType = null;
     
     public void Init(TileManager.Level level, Sprite sprite, TileManager.TilePos pos)
     {
@@ -30,8 +27,10 @@ public class TileComponent : MonoBehaviour
 
     public void DoChangeTo(TileManager.TileType newType)
     {
-        this.changingType = true;
-        this.changingToType = newType;
+        if (newType == null)
+            Destroy(this.gameObject);
+        else
+            this.GetComponentInChildren<SpriteRenderer>().sprite = this.Level.Manager.tileSprites[newType];
     }
 
     void Update()
@@ -47,15 +46,5 @@ public class TileComponent : MonoBehaviour
     public void UpdateStep()
     {
         this.prevPos = this.TilePos;
-        if (this.changingType)
-        {
-            if (this.changingToType == null)
-                Destroy(this.gameObject);
-            else
-                this.Init(this.Level, this.Level.Manager.tileSprites[this.changingToType], this.TilePos);
-
-            this.changingType = false;
-            this.changingToType = null;
-        }
     }
 }

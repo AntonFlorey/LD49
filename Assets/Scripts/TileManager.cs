@@ -319,7 +319,6 @@ public class TileManager : MonoBehaviour
                         if (Get(next) == null)
                             continue;
                         this.MaybeReplantTile(next);
-                        this.UpdateStep();
                         yield return new WaitForSeconds(replantDelay);
                     }
                 }
