@@ -132,6 +132,8 @@ MonoBehaviour:
   canPush: 1
   jumpedOff: 0
   pushedOff: 0
+  dirtyLock: 1
+  unmovable: 0
   jumpTime: 0.2
   mySprites: []
   myAnimator: {fileID: 0}

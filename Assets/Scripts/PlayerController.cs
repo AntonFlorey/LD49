@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public bool canPush = true;
     public bool jumpedOff = false;
     public bool pushedOff = false;
+    public bool dirtyLock = true;
 
     public bool unmovable = false;
     [SerializeField] private float jumpTime = 0.5f;
@@ -35,7 +36,9 @@ public class PlayerController : MonoBehaviour
 		this.pos = playerPos;
 		this.Start();
 		this.Update();
-	}
+        dirtyLock = true;
+        unmovable = false;
+    }
 
 	void Update()
 	{
@@ -43,7 +46,7 @@ public class PlayerController : MonoBehaviour
         childRenderer.transform.localPosition = new Vector3(0.0f, myOcean.GetOceanHeight(new Vector2(pos.X, pos.Y)), 0.0f);
         if (this.myLevel.Manager.fadingOutLevel != null || this.myLevel.Manager.levelStarting || this.myLevel.Manager.levelEnding || unmovable)
 			return;
-        if (canMove && !jumpedOff)
+        if (canMove && !jumpedOff && dirtyLock)
 		{
             this.Move();
 		}
@@ -57,10 +60,13 @@ public class PlayerController : MonoBehaviour
 	{
 		var dir = this.GetInputDir(new[] { KeyCode.UpArrow, KeyCode.RightArrow, KeyCode.DownArrow, KeyCode.LeftArrow });
 		if (dir.X == 0 && dir.Y == 0)
-			return;
-
+		{
+            return;
+        }
         if (myLevel.CanShiftTiles(pos, dir))
+		{
             StartCoroutine(PushTiles(dir));
+        }
     }
 
     IEnumerator PushTiles(TileManager.TilePos pushDir)
@@ -112,16 +118,25 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
+        dirtyLock = false;
 	    var dir = this.GetInputDir(new[] { KeyCode.W, KeyCode.D, KeyCode.S, KeyCode.A });
-	    if (dir.X == 0 && dir.Y == 0)
-		    return;
+        if (dir.X == 0 && dir.Y == 0)
+		{
+            dirtyLock = true;
+            return;
+        }
 
-	    // Toggle sprite flipX
-	    myRenderer.flipX = dir.X == -1 || dir.Y == -1;
+        // Toggle sprite flipX
+        myRenderer.flipX = dir.X == -1 || dir.Y == -1;
 
 	    var newPos = this.pos + dir;
 	    if (TileClear(newPos))
-		    StartCoroutine(MoveToTile(newPos));
+		{
+            Debug.Log("jump routine started");
+            StartCoroutine(MoveToTile(newPos));
+            return;
+		}
+        dirtyLock = true;
     }
 
     IEnumerator MoveToTile(TileManager.TilePos newTile)
@@ -172,6 +187,7 @@ public class PlayerController : MonoBehaviour
         {
 	        this.myLevel.Manager.ProgressToNextLevel();
         }
+        dirtyLock = true;
 	}
 
     private void AdjustDepth()
