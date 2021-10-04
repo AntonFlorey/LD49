@@ -69,7 +69,7 @@ public class TileManager : MonoBehaviour
     public bool levelStarting = false;
     public bool levelEnding = false;
     private float levelEndAndStartDelay = 1f;
-    
+
     public class TileType
     {
         private static readonly Dictionary<char, TileType> byCode = new Dictionary<char, TileType>();
