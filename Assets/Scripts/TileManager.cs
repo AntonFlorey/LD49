@@ -73,8 +73,8 @@ public class TileManager : MonoBehaviour
     private float changeWaterColorTime = 0f;
     public float changeWaterColorDelay = 2f;
     
-    public Color initialWaterColor = new Color(57, 75, 80);
-    public Color replantedWaterColor = new Color(115, 190, 211);
+    private Color initialWaterColor = new Color(57 / 255f, 75 / 255f, 80 / 255f);
+    private Color replantedWaterColor = new Color(115 / 255f, 190 / 255f, 211 / 255f);
 
     public class TileType
     {
