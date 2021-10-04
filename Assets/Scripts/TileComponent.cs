@@ -14,6 +14,8 @@ public class TileComponent : MonoBehaviour
     [SerializeField] private ParticleSystem waterparticles2;
 
     public GameObject topEntity;
+    private bool IsBreaking = false;
+    public Animation breakingAnimation;
     
     public void Init(TileManager.Level level, Sprite sprite, TileManager.TilePos pos)
     {
@@ -34,7 +36,10 @@ public class TileComponent : MonoBehaviour
     public void DoChangeTo(TileManager.TileType newType)
     {
         if (newType == null)
-            Destroy(this.gameObject);
+        {
+            this.IsBreaking = true;
+            this.breakingAnimation.Play();
+        }
         else
             this.GetComponentInChildren<SpriteRenderer>().sprite = this.Level.Manager.tileSprites[newType];
     }
@@ -50,7 +55,10 @@ public class TileComponent : MonoBehaviour
     }
 
     public void UpdateStep()
-    {
+    {           
+        if (this.IsBreaking)
+            Destroy(this.gameObject);
+
         this.prevPos = this.TilePos;
     }
 
