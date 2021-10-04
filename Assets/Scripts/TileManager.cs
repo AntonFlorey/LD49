@@ -301,6 +301,10 @@ public class TileManager : MonoBehaviour
             var tile = replanted[Random.Range(0, replanted.Length)];
             Get(pos).Comp.DoChangeTo(tile);
             Get(pos).Comp.myOcean.MakeWave(new Vector2(pos.X, pos.Y), 1, 0.1f, 0.5f);
+            if (this.playerComp.pos.X == pos.X && this.playerComp.pos.Y == pos.Y)
+            {
+                this.playerComp.myAnimator.Play("GainLeaves");
+            }
         }
     
         public IEnumerator ReplantFromPos(TilePos startPos)
@@ -462,6 +466,7 @@ public class TileManager : MonoBehaviour
             this.currentLevelOffset += levelOffset;
             this.currentLevelId++;
             this.currentLevel.playerComp.unmovable = true;
+            this.currentLevel.playerComp.myAnimator.Play("NoLeaves");
             this.pastLevels.Add(this.currentLevel);
             this.currentLevel = null;
         }
