@@ -15,7 +15,7 @@ public class TileComponent : MonoBehaviour
 
     public GameObject topEntity;
     private bool IsBreaking = false;
-    public Animation breakingAnimation;
+    public Animator breakingAnimation;
     
     public void Init(TileManager.Level level, Sprite sprite, TileManager.TilePos pos)
     {
@@ -38,7 +38,7 @@ public class TileComponent : MonoBehaviour
         if (newType == null)
         {
             this.IsBreaking = true;
-            this.breakingAnimation.Play();
+			this.breakingAnimation.Play("BlockDestroy", 0, 0.0f);
         }
         else
             this.GetComponentInChildren<SpriteRenderer>().sprite = this.Level.Manager.tileSprites[newType];

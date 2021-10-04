@@ -91,7 +91,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1851688715338997593}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: c2c8cfa8ca4016f47939f7a58f9a8d7b, type: 2}
   m_CullingMode: 0
@@ -232,7 +232,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1996323919435988520}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.21700001, y: 0.247, z: -0.2}
+  m_LocalPosition: {x: 0.21700001, y: 0.099, z: -0.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4988863799016051245}
@@ -5093,6 +5093,7 @@ MonoBehaviour:
   waterparticles1: {fileID: 496550626935121373}
   waterparticles2: {fileID: 4815342433143834530}
   topEntity: {fileID: 0}
+  breakingAnimation: {fileID: 6275375104024424268}
 --- !u!1 &7806436224761368512
 GameObject:
   m_ObjectHideFlags: 0
@@ -5119,7 +5120,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7806436224761368512}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.283, y: 0.247, z: -0.2}
+  m_LocalPosition: {x: -0.283, y: 0.087, z: -0.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4988863799016051245}

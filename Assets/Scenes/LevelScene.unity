@@ -713,7 +713,7 @@ MonoBehaviour:
   flagPrefab: {fileID: 2130075903939326781, guid: 4bad27ce6cd9918a3b04fa72f75b5604, type: 3}
   rockPrefab: {fileID: 2130075903939326781, guid: 0eced06bd61ce514faa42382911f6346, type: 3}
   currentLevelText: {fileID: 813533590}
-  currentLevelId: 1
+  currentLevelId: 3
   myCamera: {fileID: 1414344224}
   leafPrefab: {fileID: 5110769352456530724, guid: f935dab6e17a0944eb0e4ebac440d9f8, type: 3}
   leafSpeedCurve:
@@ -1633,7 +1633,7 @@ MonoBehaviour:
   waveSpeed: 0.63
   waveFrequency: 0.58
   waveDirection: {x: 1, y: 0.5}
-  noiseIntensity: 0.1
+  noiseIntensity: 0.05
   noiseFrequency: 0.2
   windDirection: {x: 0, y: 0}
   windSpeed: 1

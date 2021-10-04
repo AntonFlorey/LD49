@@ -37,7 +37,7 @@ public class Ocean : MonoBehaviour
         var normalizedDir = waveDirection.normalized;
         float wavePart = waveAmplitude * Mathf.Sin(waveFrequency * (Vector2.Dot(position, normalizedDir) / Vector2.Dot(normalizedDir, normalizedDir) - waveTimePassed));
         float noisePart = Mathf.PerlinNoise(noiseFrequency * (position.x + 2f * Time.time), noiseFrequency * (position.y + Time.time));
-        float res = wavePart + noiseIntensity * noisePart;
+        float res = wavePart + noiseIntensity * (noisePart -1.0f) - waveAmplitude;
         foreach (Wave wave in activeWaves)
 		{
             res += wave.MeasureEffect(position);
