@@ -74,7 +74,7 @@ public class TileManager : MonoBehaviour
     public float changeWaterColorDelay = 2f;
     
     private Color initialWaterColor = new Color(57 / 255f, 74 / 255f, 80 / 255f);
-    private Color replantedWaterColor = new Color(115 / 255f, 190 / 255f, 211 / 255f);
+    private Color replantedWaterColor = new Color(79 / 255f, 143 / 255f, 186 / 255f);
 
     public class TileType
     {
@@ -529,9 +529,9 @@ public class TileManager : MonoBehaviour
                 
                 foreach (var level in this.pastLevels)
                 foreach (var tile in level.Tiles.Values)
-                    tile.Comp.setWaterColorAnimator.Play("EndWater");
+                    tile.Comp.setWaterColorAnimator.Play("EndWater", 0, 0.0f);
                 foreach (var tile in this.currentLevel.Tiles.Values)
-                    tile.Comp.setWaterColorAnimator.Play("EndWater");
+                    tile.Comp.setWaterColorAnimator.Play("EndWater", 0, 0.0f);
             }
             if (this.changeWaterColorTime < this.changeWaterColorDelay)
             {
