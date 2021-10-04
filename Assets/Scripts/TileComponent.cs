@@ -38,7 +38,7 @@ public class TileComponent : MonoBehaviour
         if (newType == null)
         {
             this.IsBreaking = true;
-			this.breakingAnimation.enabled = true;
+			this.breakingAnimation.enabled = true;	
 			this.breakingAnimation.Play("BlockDestroy", 0, 0.0f);
         }
         else
