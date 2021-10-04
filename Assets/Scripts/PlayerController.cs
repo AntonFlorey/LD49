@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class PlayerController : MonoBehaviour
     public TileManager.Level myLevel;
     public GameObject childRenderer;
     private Ocean myOcean;
+    
+    public AudioSource[] splashAudios;
 
 	private void Start()
 	{
@@ -183,6 +186,9 @@ public class PlayerController : MonoBehaviour
         // visual water fun
         myOcean.MakeWave(new Vector2(newTile.X, newTile.Y), 1.0f, 0.2f, 0.5f);
         myLevel.Get(newTile).Comp.ShootWaterParticles();
+        var splashNum = (pos.X + pos.Y) % this.splashAudios.Length;
+        this.splashAudios[splashNum].Play();
+        
         // check win condition
         if (this.myLevel.Get(pos).HasFlag)
         {
