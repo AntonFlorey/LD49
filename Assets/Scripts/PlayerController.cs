@@ -159,7 +159,8 @@ public class PlayerController : MonoBehaviour
 		{
             yield return null;
 		}
-        
+
+        myOcean.MakeWave(new Vector2(pos.X, pos.Y), 0.8f, 0.1f, 0.5f);
 
         while (currentStepDelta < 1.0f)
 		{
