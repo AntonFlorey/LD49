@@ -522,7 +522,7 @@ public class TileManager : MonoBehaviour
                 this.changeWaterColorTime = 0;
                 foreach (var level in this.pastLevels)
                     foreach (var tile in level.Tiles.Values)
-                        tile.Comp.SetAnimationToOtherWaterColor();
+                        tile.Comp.breakingAnimation.Play("EndWater");
                 return;
             }
             if (this.changeWaterColorTime < this.changeWaterColorDelay)
