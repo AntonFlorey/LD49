@@ -1436,11 +1436,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9258361936f4c6647a75cba89dc060ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveAmplitude: 0
+  waveAmplitude: 0.1
   waveSpeed: 0.63
   waveFrequency: 0.58
   waveDirection: {x: 1, y: 0.5}
-  noiseIntensity: 0
+  noiseIntensity: 0.1
   noiseFrequency: 0.2
   windDirection: {x: 0, y: 0}
   windSpeed: 1
