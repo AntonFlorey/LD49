@@ -502,6 +502,9 @@ public class TileManager : MonoBehaviour
 
             if (this.pastLevels.Count > 0)
             {
+                foreach (var level in this.pastLevels)
+                    level.playerComp.ResetPosition();
+
                 var fadeBackTo = this.pastLevels[this.pastLevels.Count - 1];
                 var newCenter = Vector3.Lerp(this.currentLevel.GetGlobalCenterPos(),
                     fadeBackTo.GetGlobalCenterPos(), this.fadingBackTime / this.levelFadeDelay);

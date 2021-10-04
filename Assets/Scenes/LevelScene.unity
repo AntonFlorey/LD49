@@ -687,7 +687,6 @@ MonoBehaviour:
   - {fileID: 4900000, guid: 3ec6c34c67883759695ae280eefe6112, type: 3}
   - {fileID: 4900000, guid: 96fca36525efe2634ac73d1e5841848d, type: 3}
   - {fileID: 4900000, guid: a5ebf812f4cb35fe6a0530b6cf737990, type: 3}
-  - {fileID: 4900000, guid: e6afa020a4108c880bcac699d012bcf1, type: 3}
   - {fileID: 4900000, guid: 1780a9a18849bd5aab0b8827dce7b8de, type: 3}
   tilePrefab: {fileID: 2130075903939326781, guid: 1e59a997be4b5fcfcb2b765405a2d890, type: 3}
   unmovableTileSprite: {fileID: -4475892385933594388, guid: e124fcc8d3ca35c48b1c697443de0cba, type: 3}
@@ -712,7 +711,7 @@ MonoBehaviour:
   flagPrefab: {fileID: 2130075903939326781, guid: 4bad27ce6cd9918a3b04fa72f75b5604, type: 3}
   rockPrefab: {fileID: 2130075903939326781, guid: 0eced06bd61ce514faa42382911f6346, type: 3}
   currentLevelText: {fileID: 813533590}
-  currentLevelId: 14
+  currentLevelId: 1
   myCamera: {fileID: 1414344224}
   leafPrefab: {fileID: 5110769352456530724, guid: f935dab6e17a0944eb0e4ebac440d9f8, type: 3}
   leafSpeedCurve:
