@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
 	{
         // Adjust height according to ocean movement
         childRenderer.transform.localPosition = new Vector3(0.0f, myOcean.GetOceanHeight(new Vector2(pos.X, pos.Y)), 0.0f);
-        if (this.myLevel.Manager.fadingOutLevel != null)
+        if (this.myLevel.Manager.fadingOutLevel != null || this.myLevel.Manager.levelStarting || this.myLevel.Manager.levelEnding)
 			return;
         if (canMove && !jumpedOff)
 		{
