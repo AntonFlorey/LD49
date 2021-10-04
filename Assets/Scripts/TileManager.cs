@@ -177,9 +177,9 @@ public class TileManager : MonoBehaviour
                 comp.Init(this, manager.tileSprites[entry.Value.Type], pos);
                 entry.Value.Comp = comp;
                 if (entry.Value.HasFlag)
-                    Instantiate(manager.flagPrefab, comp.blockTransform.position + new Vector3(0f, 0f, -1.9f), Quaternion.identity, comp.blockTransform);
+                    Instantiate(manager.flagPrefab, comp.blockTransform.position + new Vector3(0f, 0f, -0.9f), Quaternion.identity, comp.blockTransform);
                 if (entry.Value.HasRock)
-                    Instantiate(manager.rockPrefab, comp.blockTransform.position + new Vector3(0f, 0f, -2f), Quaternion.identity, comp.blockTransform);
+                    Instantiate(manager.rockPrefab, comp.blockTransform.position + new Vector3(0f, 0f, -0.9f), Quaternion.identity, comp.blockTransform);
             }
             // make player
             var player = Instantiate(manager.playerPrefab, this.obj.transform);
@@ -300,7 +300,7 @@ public class TileManager : MonoBehaviour
             var replanted = new[] { Replanted, Replanted2, Replanted3, FlagTile};
             var tile = replanted[Random.Range(0, replanted.Length)];
             Get(pos).Comp.DoChangeTo(tile);
-            Get(pos).Comp.myOcean.MakeWave(new Vector2(pos.X, pos.Y), 1, 0.5f, 0.5f);
+            Get(pos).Comp.myOcean.MakeWave(new Vector2(pos.X, pos.Y), 1, 0.1f, 0.5f);
         }
     
         public IEnumerator ReplantFromPos(TilePos startPos)
