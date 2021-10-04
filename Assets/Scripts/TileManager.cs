@@ -156,31 +156,25 @@ public class TileManager : MonoBehaviour
             this.Tiles = tiles;
             this.Manager = manager;
 
-            this.obj = Instantiate(manager.levelPrefab, levelPos, Quaternion.identity);
+            this.obj = Instantiate(manager.levelPrefab);
+            this.obj.transform.position = levelPos;
             // make tiles
             foreach (var entry in tiles)
             {
                 var pos = entry.Key;
-                var tileObj = Instantiate(manager.tilePrefab, pos.ToTransformPosition(), Quaternion.identity, this.obj.transform);
+                var tileObj = Instantiate(manager.tilePrefab, levelPos + pos.ToTransformPosition(), Quaternion.identity, this.obj.transform);
                 var comp = tileObj.GetComponent<TileComponent>();
                 comp.Init(this, manager.tileSprites[entry.Value.Type], pos);
                 entry.Value.Comp = comp;
                 if (entry.Value.HasFlag)
-                {
-                    var flagObj = Instantiate(manager.flagPrefab, Vector3.zero, Quaternion.identity, comp.blockTransform);
-                    flagObj.transform.localPosition = new Vector3(0f, 0f, -1.9f);
-                }
+                    Instantiate(manager.flagPrefab, comp.blockTransform.position + new Vector3(0f, 0f, -1.9f), Quaternion.identity, comp.blockTransform);
                 if (entry.Value.HasRock)
-				{
-                    var rockObj = Instantiate(manager.rockPrefab, Vector3.zero, Quaternion.identity, comp.blockTransform);
-                    rockObj.transform.localPosition = new Vector3(0f, 0f, -2f);
-                }
+                    Instantiate(manager.rockPrefab, comp.blockTransform.position + new Vector3(0f, 0f, -2f), Quaternion.identity, comp.blockTransform);
             }
             // make player
-            var player = Instantiate(manager.playerPrefab, this.obj.transform.position + playerPos.ToTransformPosition(), Quaternion.identity, this.obj.transform);
+            var player = Instantiate(manager.playerPrefab, this.obj.transform);
             this.playerComp = player.GetComponent<PlayerController>();
-            this.playerComp.myLevel = this;
-            this.playerComp.pos = playerPos;
+            this.playerComp.Init(this, playerPos);
         }
 
         public Tile Get(TilePos pos)
@@ -409,10 +403,6 @@ public class TileManager : MonoBehaviour
         foreach (var obj in firstLevelExplanations)
             obj.SetActive(false);
         this.finalLevelExplanation.SetActive(false);
-
-        var center = this.currentLevel.GetGlobalCenterPos();
-        this.myCamera.transform.localPosition =
-            new Vector3(center.x, center.y, this.myCamera.transform.localPosition.z);
     }
 
     public void ProgressToNextLevel()
@@ -459,8 +449,16 @@ public class TileManager : MonoBehaviour
             this.currentLevel = null;
         }
         this.RestartCurrentLevel();
+        this.CenterCamera();
         if (currentLevelId < firstLevelExplanations.Length)
             firstLevelExplanations[currentLevelId].SetActive(true);
+    }
+
+    private void CenterCamera()
+    {
+        var center = this.currentLevel.GetGlobalCenterPos();
+        this.myCamera.transform.localPosition =
+            new Vector3(center.x, center.y, this.myCamera.transform.localPosition.z);
     }
 
     private void Update()
@@ -539,6 +537,7 @@ public class TileManager : MonoBehaviour
         if (Input.GetKeyDown("r"))
         {
             this.RestartCurrentLevel();
+            this.CenterCamera();
             if (currentLevelId < firstLevelExplanations.Length)
                 firstLevelExplanations[currentLevelId].SetActive(true);
         }
