@@ -162,7 +162,7 @@ public class TileManager : MonoBehaviour
             foreach (var entry in tiles)
             {
                 var pos = entry.Key;
-                var tileObj = Instantiate(manager.tilePrefab, this.obj.transform);
+                var tileObj = Instantiate(manager.tilePrefab, levelPos + pos.ToTransformPosition(), Quaternion.identity, this.obj.transform);
                 var comp = tileObj.GetComponent<TileComponent>();
                 comp.Init(this, manager.tileSprites[entry.Value.Type], pos);
                 entry.Value.Comp = comp;
